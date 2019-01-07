@@ -67,207 +67,182 @@ class Identificacion extends Component {
     console.log("Errors:", errors);
 
     return (
-      <div className="text-center">
-        <img
-          className="fondo_principal"
-          src="img/colsanitas_soft-pag_2.jpg"
-          width="748"
-          height="1366"
-          alt=""
-        />
-        <p id="tdocumento">Escoja su tipo de documento</p>
-        <div className="row text-center" id="checkbox_1">
-          <label id="checkbox" for="primary" className="btn btn-primary">
-            Cedula de Ciudadanía{" "}
-            <input type="checkbox" id="primary" className="badgebox" />
-            <span className="badge">&check;</span>
-          </label>
-          <label id="checkbox" for="second" className="btn btn-primary">
-            Cedula de Extranjería{" "}
-            <input type="checkbox" id="second" className="badgebox" />
-            <span className="badge">&check;</span>
-          </label>
-          <label id="checkbox" for="third" className="btn btn-primary">
-            Pasaporte <input type="checkbox" id="third" className="badgebox" />
-            <span className="badge">&check;</span>
-          </label>
-        </div>
-        <p id="tcedula">Digite su número de cedula</p>
-        <img id="imark" src="../../img/input_mark.png" alt="" />
-        <div className="form-group">
-          <form name="login">
-            <label for="usr" />
+      <div className="text-center fondoIdentificacion">
+        <div className="otro">
+          <div className="tdocumento">
+            <p>Escoja su tipo de documento</p>
+          </div>
+          <div className="btn-group-toggle row radiobuttonsrow">
+            <div className="col-sm">
+              <label className="btn btn-primary active radioDocumento">
+                <input
+                  type="radio"
+                  value="CC"
+                  checked={this.state.tipoIdentificacion === "CC"}
+                  onChange={this.handleChange}
+                />{" "}
+                Cédula de Ciudadanía
+              </label>
+            </div>
+            <div className="col-sm">
+              <label className="btn btn-primary radioDocumento">
+                <input
+                  type="radio"
+                  value="CE"
+                  checked={this.state.tipoIdentificacion === "CE"}
+                  onChange={this.handleChange}
+                />{" "}
+                Cédula de Extranjería
+              </label>
+            </div>
+            <div className="col-sm">
+              <label className="btn btn-primary radioDocumento">
+                <input
+                  type="radio"
+                  value="Pasaporte"
+                  checked={this.state.tipoIdentificacion === "Pasaporte"}
+                  onChange={this.handleChange}
+                />
+                Pasaporte
+              </label>
+            </div>
+            {errors.tipoIdentificacion && (
+              <div className="error-message">{errors.tipoIdentificacion}</div>
+            )}
+          </div>
+
+          <div className="tcedula">
+            <p>Digite su número de Identificación</p>
+          </div>
+
+          <div className="inputIdentificacion">
             <input
               type="text"
-              className="form-control"
-              id="usr"
-              name="display"
-              onkeypress="return solonumeros(event)"
+              className={classnames("form-control identificacion", {
+                "is-invalid": errors.numero
+              })}
+              placeholder="Número de Identificación"
+              name="identificacion"
+              value={this.state.numero}
+              onChange={this.onChange}
+              onKeyPress={this.onKeyPress}
             />
-            <div id="keyboard" className="form-group">
-              <input
-                style={{
-                  width: "75px",
-                  height: "75px",
-                  marginBottom: "3px",
-                  fontSize: "45px"
-                }}
-                type="button"
-                className="btn btn-primary"
-                value="1"
-                onClick="login.display.value +='1'"
-              />
-              <input
-                style={{
-                  width: "75px",
-                  height: "75px",
-                  marginBottom: "3px",
-                  fontSize: "45px"
-                }}
-                type="button"
-                className="btn btn-primary"
-                value="2"
-                onClick="login.display.value +='2'"
-              />
-              <input
-                style={{
-                  width: "75px",
-                  height: "75px",
-                  marginBottom: "3px",
-                  fontSize: "45px"
-                }}
-                type="button"
-                className="btn btn-primary"
-                value="3"
-                onClick="login.display.value +='3'"
-              />
-              <br />
-              <input
-                style={{
-                  width: "75px",
-                  height: "75px",
-                  marginBottom: "3px",
-                  fontSize: "45px"
-                }}
-                type="button"
-                className="btn btn-primary"
-                value="4"
-                onClick="login.display.value +='4'"
-              />
-              <input
-                style={{
-                  width: "75px",
-                  height: "75px",
-                  marginBottom: "3px",
-                  fontSize: "45px"
-                }}
-                type="button"
-                className="btn btn-primary"
-                value="5"
-                onClick="login.display.value +='5'"
-              />
-              <input
-                style={{
-                  width: "75px",
-                  height: "75px",
-                  marginBottom: "3px",
-                  fontSize: "45px"
-                }}
-                type="button"
-                className="btn btn-primary"
-                value="6"
-                onClick="login.display.value +='6'"
-              />
-              <br />
-              <input
-                style={{
-                  width: "75px",
-                  height: "75px",
-                  marginBottom: "3px",
-                  fontSize: "45px"
-                }}
-                type="button"
-                className="btn btn-primary"
-                value="7"
-                onClick="login.display.value +='7'"
-              />
-              <input
-                style={{
-                  width: "75px",
-                  height: "75px",
-                  marginBottom: "3px",
-                  fontSize: "45px"
-                }}
-                type="button"
-                className="btn btn-primary"
-                value="8"
-                onClick="login.display.value +='8'"
-              />
-              <input
-                style={{
-                  width: "75px",
-                  height: "75px",
-                  marginBottom: "3px",
-                  fontSize: "45px"
-                }}
-                type="button"
-                className="btn btn-primary"
-                value="9"
-                onClick="login.display.value +='9'"
-              />
-              <br />
-              <button
-                id="invisible"
-                style={{ width: "75px", height: "75px", marginBottom: "3px" }}
-                type="button"
-                className="btn btn-primary"
-              >
-                0
-              </button>
-              <input
-                style={{
-                  width: "75px",
-                  height: "75px",
-                  marginBottom: "3px",
-                  fontSize: "45px"
-                }}
-                type="button"
-                className="btn btn-primary"
-                value="0"
-                onClick="login.display.value +='0'"
-              />
-              <button
-                id="invisible"
-                style={{ width: "75px", height: "75px", marginBottom: "3px" }}
-                type="button"
-                className="btn btn-primary"
-              >
-                0
-              </button>
+            {errors.numero && (
+              <div className="invalid-feedback">{errors.numero}</div>
+            )}
+          </div>
+
+          <div className="row keyboard">
+            <div className="row">
+              <div className="col">
+                <input
+                  type="button"
+                  className="btn btn-primary float-right numero"
+                  value="1"
+                  onClick={this.onClick}
+                />
+              </div>
+              <div className="col">
+                <input
+                  type="button"
+                  className="btn btn-primary numero"
+                  value="2"
+                  onClick={this.onClick}
+                />
+              </div>
+              <div className="col">
+                <input
+                  type="button"
+                  className="btn btn-primary float-left numero"
+                  value="3"
+                  onClick={this.onClick}
+                />
+              </div>
             </div>
-            <div className="form-group" id="keyboard_2">
-              <input
-                style={{
-                  width: "312px",
-                  height: "75px",
-                  marginBottom: "3px",
-                  fontSize: "40px"
-                }}
-                type="button"
-                className="btn btn-primary"
-                value=" ACEPTAR"
-                onclick="#"
-              />
-              <br />
-              <input
-                style={{ width: "312px", height: "75px", fontSize: "40px" }}
-                type="button"
-                className="btn btn-primary"
-                value="BORRAR"
-                onclick="eliminar()"
-              />
+            <br />
+            <div className="row">
+              <div className="col">
+                <input
+                  type="button"
+                  className="btn btn-primary float-right numero"
+                  value="4"
+                  onClick={this.onClick}
+                />
+              </div>
+              <div className="col">
+                <input
+                  type="button"
+                  className="btn btn-primary numero"
+                  value="5"
+                  onClick={this.onClick}
+                />
+              </div>
+              <div className="col">
+                <input
+                  type="button"
+                  className="btn btn-primary float-left numero"
+                  value="6"
+                  onClick={this.onClick}
+                />
+              </div>
             </div>
-          </form>
+            <br />
+            <div className="row">
+              <div className="col">
+                <input
+                  type="button"
+                  className="btn btn-primary float-right numero"
+                  value="7"
+                  onClick={this.onClick}
+                />
+              </div>
+              <div className="col">
+                <input
+                  type="button"
+                  className="btn btn-primary numero"
+                  value="8"
+                  onClick={this.onClick}
+                />
+              </div>
+              <div className="col">
+                <input
+                  type="button"
+                  className="btn btn-primary float-left numero"
+                  value="9"
+                  onClick={this.onClick}
+                />
+              </div>
+            </div>
+            <br />
+            <div className="row">
+              <div className="col" />
+              <div className="col">
+                <input
+                  type="button"
+                  className="btn btn-primary numero"
+                  value="0"
+                  onClick={this.onClick}
+                />
+              </div>
+              <div className="col" />
+            </div>
+          </div>
+
+          <div className="form-group keyboard_2">
+            <input
+              className="btn btn-primary aceptar"
+              type="button"
+              value="ACEPTAR"
+              onClick={this.onClick}
+            />
+            <br />
+            <input
+              className="btn btn-primary eliminar"
+              type="button"
+              value="BORRAR"
+              onClick={this.onClick}
+            />
+          </div>
         </div>
       </div>
     );
