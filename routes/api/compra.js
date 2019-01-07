@@ -33,8 +33,9 @@ router.post("/iniciar", (req, res) => {
   //const stringCompra = `01,50,1,T0501,78175,0,0,11,59`;
 
   fs.writeFile(
-    "./TCP-IP/IOFile/inp/dataf001_inp.eft",
+    ".ºTCP-IP/IOFile/inp/dataf001_inp.eft",
     stringCompraFinal,
+    { flag: "w" },
     function(err) {
       if (err) {
         console.log(err);
