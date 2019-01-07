@@ -108,13 +108,13 @@ app.use(bodyParser.json());
 const db = require("./config/keys").mongoURI;
 
 // Connect to mongodb
-mongoose
+/*mongoose
   .connect(
     db,
     { useNewUrlParser: true }
   )
   .then(() => console.log("MongoDB Connected"))
-  .catch(err => console.log(err));
+  .catch(err => console.log(err));*/
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
