@@ -64,7 +64,6 @@ class Identificacion extends Component {
 
   render() {
     const { errors } = this.state;
-    console.log("Errors:", errors);
 
     return (
       <div className="text-center fondoIdentificacion">
