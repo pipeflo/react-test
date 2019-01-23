@@ -1,7 +1,8 @@
 import {
   SET_DATOS_COMPRA,
   SET_CONTRATO,
-  SET_VALOR_VALE
+  SET_VALOR_VALE,
+  BORRAR_COMPRA_ACTUAL
 } from "../actions/types";
 
 const initialState = {
@@ -34,6 +35,10 @@ export default function(state = initialState, action) {
         ...state,
         contrato: action.payload.contrato,
         valorVale: action.payload.precio.valorTotal
+      };
+    case BORRAR_COMPRA_ACTUAL:
+      return {
+        ...initialState
       };
     default:
       return state;

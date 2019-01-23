@@ -16,6 +16,12 @@ router.get("/test", (req, res) => res.json({ msg: "Compras Funciona" }));
 router.post("/iniciar", (req, res) => {
   console.log("Entro a iniciar compra con ", req.body);
   const { errors, isValid } = validateCompra(req.body);
+  //borrar archivo
+  fs.unlink("./TCP-IP/IOFile/out/dataf001_OUT.eft", err => {
+    if (err) {
+      console.log("Error borrando archivo", err);
+    }
+  });
 
   // Check Validation
   if (!isValid) {

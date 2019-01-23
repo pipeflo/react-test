@@ -4,7 +4,8 @@ import {
   BENEFICIARIO_LOADING,
   BORRAR_BENEFICIARIO_ACTUAL,
   GET_ERRORS,
-  CLEAR_ERRORS
+  CLEAR_ERRORS,
+  BORRAR_COMPRA_ACTUAL
 } from "./types";
 
 //
@@ -38,6 +39,7 @@ export const setBeneficiario = data => {
 //re-iniciar app
 export const reiniciarCompra = () => dispatch => {
   dispatch(borrarBeneficiarioActual());
+  dispatch(borrarCompraActual());
 };
 
 //cambiar estado de cargando beneficiario
@@ -52,6 +54,13 @@ export const setBeneficiarioLoading = cargando => {
 export const borrarBeneficiarioActual = () => {
   return {
     type: BORRAR_BENEFICIARIO_ACTUAL
+  };
+};
+
+//Borrar compra
+export const borrarCompraActual = () => {
+  return {
+    type: BORRAR_COMPRA_ACTUAL
   };
 };
 

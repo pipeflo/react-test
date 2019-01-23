@@ -255,6 +255,8 @@ router.post("/precio", (req, res) => {
     </soapenv:Body>
  </soapenv:Envelope>`;
 
+    console.log("XML traer precio:", xml);
+
     (async () => {
       try {
         const { response } = await soapRequest(url, headers, xml, 10000); // Optional timeout parameter(milliseconds)
