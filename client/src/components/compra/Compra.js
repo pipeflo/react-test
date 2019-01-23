@@ -91,11 +91,12 @@ class Compra extends Component {
               botón Verde del Datafono para realizar el pago, y siga las
               instrucciones del datafono.
             </p>
-            <Websocket
-              url="ws://localhost:5000"
-              onMessage={this.handleData.bind(this)}
-              id="mensaje-compra"
-            />
+            <div id="mensaje-compra">
+              <Websocket
+                url="ws://localhost:5000"
+                onMessage={this.handleData.bind(this)}
+              />
+            </div>
             <p>{this.state.data}</p>
 
             <Link to="/identificacion" id="terminarCompra">
