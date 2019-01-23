@@ -84,7 +84,7 @@ class Compra extends Component {
     return (
       <div className="text-center fondoIdentificacion">
         <div className="otro">
-          <div className="tdocumento">
+          <div id="tdocumento">
             <p id="tdocumentoCompra">
               {beneficiario.nombre}, Ha iniciado la compra de {compra.cantidad}{" "}
               vales por un valor de ${compra.valorTotal}. Por favor presione el
