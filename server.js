@@ -8,6 +8,7 @@ const fs = require("fs");
 const users = require("./routes/api/users");
 const beneficiarios = require("./routes/api/beneficiarios");
 const compra = require("./routes/api/compra");
+const configuracion = require("./routes/api/configuracion");
 
 const app = express();
 
@@ -124,6 +125,7 @@ app.get("/", (req, res) => {
 app.use("/api/users", users);
 app.use("/api/beneficiarios", beneficiarios);
 app.use("/api/compra", compra);
+app.use("/api/configuracion", configuracion);
 
 const port = process.env.port || 5000;
 

@@ -1,10 +1,10 @@
 import { combineReducers } from "redux";
-import identificacionReducer from "./identificacionReducer";
-import cantidadReducer from "./cantidadReducer";
+import identificacionReducer from "./beneficiarioReducer";
+import cantidadReducer from "./compraReducer";
 import errorReducer from "./errorReducer";
 
 export default combineReducers({
-  identificacion: identificacionReducer,
+  beneficiario: identificacionReducer,
   compra: cantidadReducer,
   errors: errorReducer
 });

@@ -24,10 +24,7 @@ router.post("/iniciar", (req, res) => {
   }
 
   //Consultar precio Vale
-  const precioVale = 22000;
-  //Crear archivo de compra
-  const valorCompra = precioVale * Number(req.body.cantidad);
-  const stringCompra = `01,${valorCompra},1,T0501,78175,0,0,11,`;
+  const stringCompra = `01,${req.body.valorTotal},1,T0501,78175,0,0,11,`;
   const lrc = calculateLRC(stringCompra);
   const stringCompraFinal = stringCompra + lrc;
   //const stringCompra = `01,50,1,T0501,78175,0,0,11,59`;
@@ -44,8 +41,8 @@ router.post("/iniciar", (req, res) => {
       console.log("Escribio archivo");
       return res.json({
         inicioCompra: true,
-        valor: valorCompra,
-        precioVale: precioVale,
+        valor: req.body.valorTotal,
+        precioVale: req.body.valorVale,
         cantidad: Number(req.body.cantidad),
         stringCompra: stringCompraFinal
       });

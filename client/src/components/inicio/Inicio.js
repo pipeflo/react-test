@@ -6,10 +6,15 @@ class Inicio extends Component {
     return (
       <Link to="/identificacion">
         <div className="principal">
-          <p className="texto_inicio">
-            {" "}
-            Toque para <br /> INICIAR
-          </p>
+          <img
+            id="fondo_principal"
+            src="../../img/colsanitas_soft-pag_1.jpg"
+            width="748"
+            height="1366"
+            alt=""
+          />
+          <p id="texto_1"> Toque para</p>
+          <p id="texto_2">INICIAR</p>
         </div>
       </Link>
     );

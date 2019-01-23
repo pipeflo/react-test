@@ -9,29 +9,22 @@ class Cantidad extends Component {
   constructor() {
     super();
     this.state = {
-      numero: "",
-      tipoIdentificacion: "",
-      beneficiarios: [],
       beneficiario: {},
-      cantidad: "",
       compra: {},
+      cantidad: 0,
+      valorTotal: 0,
       errors: {}
     };
-    this.handleChange = this.handleChange.bind(this);
   }
 
   componentDidMount() {
-    if (
-      !this.props.identificacion.beneficiarios ||
-      this.props.identificacion.beneficiarios.length === 0
-    ) {
+    console.log(this.props.compra.valorVale);
+    if (this.props.compra.valorVale === 0) {
       this.props.history.push("/identificacion");
     }
     this.setState({
-      numero: this.props.identificacion.numero,
-      tipoIdentificacion: this.props.identificacion.tipoIdentificacion,
-      beneficiarios: this.props.identificacion.beneficiarios,
-      beneficiario: this.props.identificacion.beneficiarios[1]
+      beneficiario: this.props.beneficiario,
+      compra: this.props.compra
     });
     console.log("si entró con props", this.props);
   }
@@ -45,183 +38,222 @@ class Cantidad extends Component {
       console.log("Populo compra");
       this.props.history.push("/compra");
     }
-  }
 
-  onChange = e => {
-    this.setState({ [e.target.name]: e.target.value });
-    console.log("selecciono ", e.target.value);
-  };
+    if (nextProps.beneficiario.contratos.length === 0) {
+      this.props.history.push("/");
+    }
+  }
 
   onKeyPress = e => {
     this.setState({ [e.target.name]: e.target.value });
   };
 
-  handleChange(event) {
-    this.setState({
-      tipoIdentificacion: event.target.value
-    });
-  }
+  onChange = e => {
+    this.setState({ [e.target.name]: e.target.value });
+  };
 
   onClick = e => {
     e.preventDefault();
     if (e.target.value === "BORRAR") {
-      this.setState({ cantidad: "" });
+      this.setState({ cantidad: 0 });
     } else if (e.target.value === "ACEPTAR") {
-      console.log("Iniciar compra para ", this.state.cantidad, "vales");
+      console.log("Iniciar compra para ", this.state.compra.cantidad, "vales");
       const compraData = {
-        cantidad: this.state.cantidad
+        cantidad: this.state.cantidad,
+        valorVale: this.state.compra.valorVale,
+        valorTotal:
+          parseInt(this.state.cantidad) * parseInt(this.state.compra.valorVale)
       };
 
       this.props.iniciarCompra(compraData);
+    } else if (e.target.value === "SALIR") {
+      this.props.reiniciarCompra({});
     } else {
-      this.setState({
-        cantidad: this.state.cantidad + e.target.value
-      });
+      if (this.state.cantidad === 0) {
+        this.setState({
+          cantidad: e.target.value
+        });
+      } else {
+        this.setState({
+          cantidad: this.state.cantidad + e.target.value
+        });
+      }
     }
   };
 
   render() {
     const { errors } = this.state;
-    const beneficiario = this.state.beneficiario;
+    const { beneficiario } = this.state;
+    const compra = this.props.compra;
+    const cantidad = this.state.cantidad;
+    const styleNumber = {
+      width: "75px",
+      height: "75px",
+      marginBottom: "20px",
+      marginRight: "20px",
+      fontSize: "45px"
+    };
 
     return (
-      <div className="text-center fondoIdentificacion">
-        <div className="otro">
-          <div className="tdocumento">
-            <p>
-              Hola {beneficiario.nombre}, Por Favor Ingrese el número de Vales a
-              comprar
-            </p>
-          </div>
-
-          <div className="inputIdentificacion">
-            <input
-              type="text"
-              className={classnames("form-control identificacion", {
-                "is-invalid": errors.cantidad
-              })}
-              placeholder="Cantidad de Vales"
-              name="cantidad"
-              value={this.state.cantidad}
-              onChange={this.onChange}
-              onKeyPress={this.onKeyPress}
-            />
-            {errors.cantidad && (
-              <div className="invalid-feedback">{errors.cantidad}</div>
-            )}
-          </div>
-
-          <div className="row keyboard">
-            <div className="row">
-              <div className="col">
-                <input
-                  type="button"
-                  className="btn btn-primary float-right numero"
-                  value="1"
-                  onClick={this.onClick}
-                />
-              </div>
-              <div className="col">
-                <input
-                  type="button"
-                  className="btn btn-primary numero"
-                  value="2"
-                  onClick={this.onClick}
-                />
-              </div>
-              <div className="col">
-                <input
-                  type="button"
-                  className="btn btn-primary float-left numero"
-                  value="3"
-                  onClick={this.onClick}
-                />
-              </div>
-            </div>
-            <br />
-            <div className="row">
-              <div className="col">
-                <input
-                  type="button"
-                  className="btn btn-primary float-right numero"
-                  value="4"
-                  onClick={this.onClick}
-                />
-              </div>
-              <div className="col">
-                <input
-                  type="button"
-                  className="btn btn-primary numero"
-                  value="5"
-                  onClick={this.onClick}
-                />
-              </div>
-              <div className="col">
-                <input
-                  type="button"
-                  className="btn btn-primary float-left numero"
-                  value="6"
-                  onClick={this.onClick}
-                />
-              </div>
-            </div>
-            <br />
-            <div className="row">
-              <div className="col">
-                <input
-                  type="button"
-                  className="btn btn-primary float-right numero"
-                  value="7"
-                  onClick={this.onClick}
-                />
-              </div>
-              <div className="col">
-                <input
-                  type="button"
-                  className="btn btn-primary numero"
-                  value="8"
-                  onClick={this.onClick}
-                />
-              </div>
-              <div className="col">
-                <input
-                  type="button"
-                  className="btn btn-primary float-left numero"
-                  value="9"
-                  onClick={this.onClick}
-                />
-              </div>
-            </div>
-            <br />
-            <div className="row">
-              <div className="col" />
-              <div className="col">
-                <input
-                  type="button"
-                  className="btn btn-primary numero"
-                  value="0"
-                  onClick={this.onClick}
-                />
-              </div>
-              <div className="col" />
-            </div>
-          </div>
-
-          <div className="form-group keyboard_2">
-            <input
-              className="btn btn-primary aceptar"
-              type="button"
-              value="ACEPTAR"
-              onClick={this.onClick}
-            />
-            <br />
-            <input
-              className="btn btn-primary eliminar"
-              type="button"
-              value="BORRAR"
-              onClick={this.onClick}
-            />
-          </div>
+      <div>
+        <img
+          id="fondo_principal"
+          src="../../img/colsanitas_soft-pag_2.jpg"
+          width="748"
+          height="1366"
+          alt=""
+        />
+        <p id="nombre_cliente">{beneficiario.nombre} </p>
+        <p id="info_contrato">
+          {compra.contrato.nombreProducto} No. Contrato:{" "}
+          {compra.contrato.numeroContrato}
+        </p>
+        <hr id="hr_1" color="white" size="2" width="600" />
+        <p id="vale">Valor del vale: ${compra.valorVale}</p>
+        <p id="cantidad">Cantidad: {cantidad}</p>
+        <hr id="hr_2" color="white" size="2" width="600" />
+        <p id="total">
+          TOTAL: ${parseInt(cantidad) * parseInt(compra.valorVale)}
+        </p>
+        <p id="tcompra">Indique el número de vales a comprar</p>
+        <img id="imarkCantidad" src="../../img/input_mark.png" alt="" />
+        <input
+          type="text"
+          className={classnames("form-control", {
+            "is-invalid": errors.cantidad
+          })}
+          id="usrCantidad"
+          placeholder="Cantidad de Vales"
+          name="cantidad"
+          value={this.state.cantidad}
+          onChange={this.onChange}
+          onKeyPress={this.onKeyPress}
+        />
+        {errors.cantidad && (
+          <div className="invalid-feedback">{errors.cantidad}</div>
+        )}
+        <div id="keyboardCantidad" className="form-group">
+          <input
+            style={styleNumber}
+            type="button"
+            className="btn btn-primary"
+            value="1"
+            onClick={this.onClick}
+          />
+          <input
+            style={styleNumber}
+            type="button"
+            className="btn btn-primary"
+            value="2"
+            onClick={this.onClick}
+          />
+          <input
+            style={styleNumber}
+            type="button"
+            className="btn btn-primary"
+            value="3"
+            onClick={this.onClick}
+          />
+          <br />
+          <input
+            style={styleNumber}
+            type="button"
+            className="btn btn-primary"
+            value="4"
+            onClick={this.onClick}
+          />
+          <input
+            style={styleNumber}
+            type="button"
+            className="btn btn-primary"
+            value="5"
+            onClick={this.onClick}
+          />
+          <input
+            style={styleNumber}
+            type="button"
+            className="btn btn-primary"
+            value="6"
+            onClick={this.onClick}
+          />
+          <br />
+          <input
+            style={styleNumber}
+            type="button"
+            className="btn btn-primary"
+            value="7"
+            onClick={this.onClick}
+          />
+          <input
+            style={styleNumber}
+            type="button"
+            className="btn btn-primary"
+            value="8"
+            onClick={this.onClick}
+          />
+          <input
+            style={styleNumber}
+            type="button"
+            className="btn btn-primary"
+            value="9"
+            onClick={this.onClick}
+          />
+          <br />
+          <button
+            id="invisible"
+            style={{
+              width: "75px",
+              height: "75px",
+              marginBottom: "3px",
+              marginRight: "20px"
+            }}
+            type="button"
+            className="btn btn-primary"
+          />
+          <input
+            style={{
+              width: "75px",
+              height: "75px",
+              marginBottom: "3px",
+              marginRight: "20px",
+              fontSize: "45px"
+            }}
+            type="button"
+            className="btn btn-primary"
+            value="0"
+            onClick={this.onClick}
+          />
+          <button
+            id="invisible"
+            style={{ width: "75px", height: "75px", marginBottom: "3px" }}
+            type="button"
+            className="btn btn-primary"
+          />
+        </div>
+        <div className="form-group" id="keyboard_2">
+          <input
+            style={{ width: "312px", height: "75px", fontSize: "40px" }}
+            type="button"
+            className="btn btn-primary"
+            value="ACEPTAR"
+            onClick={this.onClick}
+          />
+          <input
+            style={{ width: "312px", height: "75px", fontSize: "40px" }}
+            type="button"
+            className="btn btn-primary"
+            value="BORRAR"
+            onClick={this.onClick}
+          />
+        </div>
+        <div className="form-group" id="keyboard_2Cantidad">
+          <input
+            style={{ width: "312px", height: "75px", fontSize: "40px" }}
+            type="button"
+            className="btn btn-primary"
+            value="SALIR"
+            onClick={this.onClick}
+          />
         </div>
       </div>
     );
@@ -231,13 +263,13 @@ class Cantidad extends Component {
 Cantidad.propTypes = {
   iniciarCompra: PropTypes.func.isRequired,
   reiniciarCompra: PropTypes.func.isRequired,
-  identificacion: PropTypes.object.isRequired,
+  beneficiario: PropTypes.object.isRequired,
   compra: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
-  identificacion: state.identificacion,
+  beneficiario: state.beneficiario,
   compra: state.compra,
   errors: state.errors
 });

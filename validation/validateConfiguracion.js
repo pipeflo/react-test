@@ -1,8 +1,10 @@
 const Validator = require("validator");
 const isEmpty = require("./is-empty");
 
-module.exports = function validateConsultaBeneficiario(data) {
+module.exports = function validateConfiguracion(data) {
   let errors = {};
+
+  console.log("Data:", data);
 
   data.numeroIdentificacion = !isEmpty(data.numeroIdentificacion)
     ? data.numeroIdentificacion

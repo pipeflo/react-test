@@ -7,6 +7,8 @@ import Inicio from "./components/inicio/Inicio";
 import Identificacion from "./components/identificacion/Identificacion";
 import Cantidad from "./components/cantidad/Cantidad";
 import Compra from "./components/compra/Compra";
+import Contratos from "./components/contratos/Contratos";
+import Configuracion from "./components/configuracion/Configuracion";
 
 import "./App.css";
 
@@ -18,8 +20,10 @@ class App extends Component {
           <div className="App">
             <Route exact path="/" component={Inicio} />
             <Route exact path="/identificacion" component={Identificacion} />
+            <Route exact path="/contratos" component={Contratos} />
             <Route exact path="/cantidad" component={Cantidad} />
             <Route exact path="/compra" component={Compra} />
+            <Route exact path="/configuracion" component={Configuracion} />
           </div>
         </Router>
       </Provider>

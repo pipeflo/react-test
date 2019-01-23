@@ -24,7 +24,7 @@ class Compra extends Component {
       this.props.history.push("/identificacion");
     }
     this.setState({
-      beneficiario: this.props.identificacion.beneficiarios[1],
+      beneficiario: this.props.beneficiario,
       compra: this.props.compra
     });
   }
@@ -85,11 +85,11 @@ class Compra extends Component {
       <div className="text-center fondoIdentificacion">
         <div className="otro">
           <div className="tdocumento">
-            <p>
+            <p id="tdocumentoCompra">
               {beneficiario.nombre}, Ha iniciado la compra de {compra.cantidad}{" "}
-              vales por un valor de ${compra.valor}. Por favor presione el botón
-              Verde del Datafono para realizar el pago, y siga las instrucciones
-              del datafono.
+              vales por un valor de ${compra.valorTotal}. Por favor presione el
+              botón Verde del Datafono para realizar el pago, y siga las
+              instrucciones del datafono.
             </p>
             <Websocket
               url="ws://localhost:5000"
@@ -97,7 +97,9 @@ class Compra extends Component {
             />
             <p>{this.state.data}</p>
 
-            <Link to="/identificacion">Terminar</Link>
+            <Link to="/identificacion" id="terminarCompra">
+              Terminar
+            </Link>
           </div>
         </div>
       </div>
@@ -108,13 +110,13 @@ class Compra extends Component {
 Compra.propTypes = {
   iniciarCompra: PropTypes.func.isRequired,
   reiniciarCompra: PropTypes.func.isRequired,
-  identificacion: PropTypes.object.isRequired,
+  beneficiario: PropTypes.object.isRequired,
   compra: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
-  identificacion: state.identificacion,
+  beneficiario: state.beneficiario,
   compra: state.compra,
   errors: state.errors
 });
