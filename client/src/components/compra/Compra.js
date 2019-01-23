@@ -94,6 +94,7 @@ class Compra extends Component {
             <Websocket
               url="ws://localhost:5000"
               onMessage={this.handleData.bind(this)}
+              id="mensaje-compra"
             />
             <p>{this.state.data}</p>
 

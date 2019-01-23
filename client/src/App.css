@@ -330,11 +330,20 @@
   top: 250px;
   left: 30px;
   font-family: "FNB Sans Regular";
-  font-size: 30px;
+  font-size: 20px;
   color: white;
 }
 
 #terminarCompra {
+  position: absolute;
+  top: 700px;
+  left: 30px;
+  font-family: "FNB Sans Regular";
+  font-size: 30px;
+  color: white;
+}
+
+#mensaje-compra {
   position: absolute;
   top: 500px;
   left: 30px;
