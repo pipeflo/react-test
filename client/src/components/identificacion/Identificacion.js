@@ -12,7 +12,7 @@ class Identificacion extends Component {
       nombre: "",
       tipoIdentificacion: "",
       codTipoIdentificacion: "",
-      numeroIdentificacion: "1018418668",
+      numeroIdentificacion: "",
       contratos: [],
       cargando: false,
       errors: {}
