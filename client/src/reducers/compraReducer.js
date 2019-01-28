@@ -2,16 +2,20 @@ import {
   SET_DATOS_COMPRA,
   SET_CONTRATO,
   SET_VALOR_VALE,
-  BORRAR_COMPRA_ACTUAL
+  BORRAR_COMPRA_ACTUAL,
+  CONTRATO_LOADING,
+  TIRA_AUDITORA_LOADING
 } from "../actions/types";
 
 const initialState = {
+  cargando: false,
   inicioCompra: false,
   valorVale: 0,
   valorTotal: 0,
   cantidad: 0,
   stringCompra: "",
-  contrato: {}
+  contrato: {},
+  tiraAuditora: {}
 };
 
 export default function(state = initialState, action) {
@@ -19,11 +23,8 @@ export default function(state = initialState, action) {
     case SET_DATOS_COMPRA:
       return {
         ...state,
-        inicioCompra: action.payload.inicioCompra,
-        valorTotal: action.payload.valor,
-        valorVale: action.payload.precioVale,
-        cantidad: action.payload.cantidad,
-        stringCompra: action.payload.stringCompra
+        ...action.payload,
+        cargando: false
       };
     case SET_CONTRATO:
       return {
@@ -34,11 +35,22 @@ export default function(state = initialState, action) {
       return {
         ...state,
         contrato: action.payload.contrato,
-        valorVale: action.payload.precio.valorTotal
+        valorVale: action.payload.precio.valorTotal,
+        cargando: false
       };
     case BORRAR_COMPRA_ACTUAL:
       return {
         ...initialState
+      };
+    case CONTRATO_LOADING:
+      return {
+        ...initialState,
+        cargando: action.payload
+      };
+    case TIRA_AUDITORA_LOADING:
+      return {
+        ...state,
+        cargando: true
       };
     default:
       return state;

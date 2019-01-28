@@ -1,27 +1,37 @@
 import axios from "axios";
-import { GET_ERRORS, SET_CONTRATO, SET_VALOR_VALE } from "./types";
-import compraReducer from "../reducers/compraReducer";
+import { GET_ERRORS, SET_VALOR_VALE, CONTRATO_LOADING } from "./types";
 
 export const agregarContrato = (contratoData, beneficiario) => dispatch => {
-  //Llamar API para traer precio de vale
-  const infoCompra = {
-    beneficiario: beneficiario,
-    contrato: contratoData
-  };
-  console.log("Ejecutando Accion traer precio");
+  dispatch(setContratoLoading(true));
+  //Traer código de ciudad
   axios
-    .post("/api/beneficiarios/precio", infoCompra)
+    .post("/api/beneficiarios/ciudad", contratoData)
     .then(res => {
-      //Se consulta precio vale y se envia a reducer
-      const compra = {
-        contrato: contratoData,
-        precio: res.data
+      contratoData = res.data;
+      //Llamar API para traer precio de vale
+      const infoCompra = {
+        beneficiario: beneficiario,
+        contrato: contratoData
       };
-      console.log("datos compra:", compra);
-      dispatch({
-        type: SET_VALOR_VALE,
-        payload: compra
-      });
+      axios
+        .post("/api/beneficiarios/precio", infoCompra)
+        .then(res => {
+          //Se consulta precio vale y se envia a reducer
+          const compra = {
+            contrato: contratoData,
+            precio: res.data
+          };
+          dispatch({
+            type: SET_VALOR_VALE,
+            payload: compra
+          });
+        })
+        .catch(err =>
+          dispatch({
+            type: GET_ERRORS,
+            payload: err.response.data
+          })
+        );
     })
     .catch(err =>
       dispatch({
@@ -29,4 +39,12 @@ export const agregarContrato = (contratoData, beneficiario) => dispatch => {
         payload: err.response.data
       })
     );
+};
+
+//cambiar estado de cargando beneficiario
+export const setContratoLoading = cargando => {
+  return {
+    type: CONTRATO_LOADING,
+    payload: true
+  };
 };

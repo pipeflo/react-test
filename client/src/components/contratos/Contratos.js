@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { agregarContrato } from "../../actions/contratosActions";
 import { reiniciarCompra } from "../../actions/identificacionActions";
+import Spinner from "../common/Spinner";
 
 class Contratos extends Component {
   constructor() {
@@ -15,7 +16,8 @@ class Contratos extends Component {
       contratos: [],
       beneficiario: {},
       compra: {},
-      errors: {}
+      errors: {},
+      contratoSinOpcionDeCompra: false
     };
     this.onClick = this.onClick.bind(this);
   }
@@ -41,7 +43,6 @@ class Contratos extends Component {
       tipoIdentificacion: this.props.beneficiario.tipoIdentificacion,
       contratos: this.props.beneficiario.contratos
     });
-    console.log("si entró con props", this.props);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -57,7 +58,7 @@ class Contratos extends Component {
       this.props.history.push("/");
     }
 
-    if (nextProps.compra.contrato) {
+    if (nextProps.compra.valorVale) {
       this.props.history.push("/cantidad");
     }
   }
@@ -83,15 +84,25 @@ class Contratos extends Component {
       this.props.reiniciarCompra({});
     } else {
       const indexContrato = e.target.getAttribute("value");
-      this.props.agregarContrato(
-        this.props.beneficiario.contratos[indexContrato],
-        this.props.beneficiario
-      );
+      if (
+        !["55", "32", "16", "67"].includes(
+          this.props.beneficiario.contratos[indexContrato].codigoPlan
+        )
+      ) {
+        this.props.agregarContrato(
+          this.props.beneficiario.contratos[indexContrato],
+          this.props.beneficiario
+        );
+      } else {
+        this.setState({ contratoSinOpcionDeCompra: true });
+      }
     }
   }
 
   render() {
+    const { cargando } = this.props.compra;
     const nombre = this.state.nombre;
+    const contratoSinCompra = this.state.contratoSinOpcionDeCompra;
     const funciones = { onClick: this.onClick };
     let activos = 0;
     let htmlContratos = this.props.beneficiario.contratos.map(function(
@@ -147,6 +158,13 @@ class Contratos extends Component {
           />
           <p id="nombre_cliente">{nombre}</p>
           <p id="contrato">Seleccione el contrato al que aplique la compra</p>
+          {contratoSinCompra ? (
+            <p id="contratoSinCompra" className="message-error">
+              El contrato seleccionado no requiere de la compra de Vales.
+            </p>
+          ) : (
+            ""
+          )}
           <div className="form-group" id="contract_1">
             {htmlContratos}
           </div>
@@ -163,7 +181,7 @@ class Contratos extends Component {
       );
     } else {
       contenido = (
-        <div>
+        <div className="principal">
           <img
             id="fondo_principal"
             src="../../img/colsanitas_soft-pag_2.jpg"
@@ -192,7 +210,22 @@ class Contratos extends Component {
       );
     }
 
-    return contenido;
+    if (cargando) {
+      return (
+        <div className="principal">
+          <img
+            id="fondo_principal"
+            src="../../img/colsanitas_soft-pag_2.jpg"
+            width="748"
+            height="1366"
+            alt=""
+          />
+          <Spinner />
+        </div>
+      );
+    } else {
+      return contenido;
+    }
   }
 }
 

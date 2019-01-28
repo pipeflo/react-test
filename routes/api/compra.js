@@ -1,6 +1,9 @@
 const express = require("express");
 const fs = require("fs");
 const router = express.Router();
+const { registrarCompra } = require("../../config/keys");
+const soapRequest = require("easy-soap-request");
+const soap = require("soap");
 
 //Beneficiario validator
 const validateCompra = require("../../validation/validationCompra");
@@ -47,13 +50,134 @@ router.post("/iniciar", (req, res) => {
       console.log("Escribio archivo");
       return res.json({
         inicioCompra: true,
-        valor: req.body.valorTotal,
+        valorTotal: req.body.valorTotal,
         precioVale: req.body.valorVale,
         cantidad: Number(req.body.cantidad),
         stringCompra: stringCompraFinal
       });
     }
   );
+});
+
+// @Route  POST api/compra/registrar
+// @Desc   Registrar compra
+// @Access Public
+router.post("/registrar", (req, res) => {
+  //const { errors, isValid } = validateConsultaPrecio(req.body);
+
+  const errors = {};
+
+  console.log("ingreso a registrar compra:", req.body);
+
+  const isValid = true;
+
+  // Check Validation
+  if (!isValid) {
+    return res.status(400).json(errors);
+  } else {
+    //Ir y consultar usuario
+    const url =
+      "https://osiapppre02.colsanitas.com/services/ValeElectronico.ValeElectronicoHttpSoap12Endpoint?wsdl";
+
+    const input = {
+      canal: registrarCompra.canal,
+      ciudad: req.body.compra.contrato.ciudad.codigo,
+      codigoCompania: req.body.compra.contrato.codigoCompania,
+      codigoConcepto: registrarCompra.codigoConcepto,
+      codigoEstacion: registrarCompra.codigoEstacion,
+      tipoDocUsuario: req.body.beneficiario.codTipoIdentificacion,
+      documentoIdentUsu: req.body.beneficiario.numeroIdentificacion,
+      contrato: req.body.compra.contrato.numeroContrato,
+      plan: req.body.compra.contrato.codigoPlan,
+      familia: req.body.compra.contrato.numeroFamilia,
+      usuario: req.body.compra.contrato.codigoTipoUsuario,
+      numerTransaccion: req.body.compra.numeroAprobacion,
+      cantidad: req.body.compra.cantidad,
+      valorTotalTrx: req.body.compra.valorTotal,
+      mediosDePago: `5,${req.body.compra.valorTotal},0,0,D,0,${
+        req.body.compra.numeroAprobacion
+      }`,
+      vales: req.body.compra.cantidad,
+      categoria: "",
+      documentoIdentPrest: "",
+      servicio: "",
+      viaIngreso: "",
+      estado: "2",
+      tipoDocPrest: ""
+    };
+
+    soap.createClient(url, function(err, client) {
+      client.registrar(input, function(err, result) {
+        if (err) {
+          errors.mensaje = err;
+          console.log("Error llamando Servicio Registrar Compra:", err);
+          return res.status(400).json(errors);
+        } else {
+          console.log(result);
+          if (result.ValeElectronico[0].codigoError != "0") {
+            errors.mensaje = result.ValeElectronico[0].descripcionError;
+            return res.status(400).json(errors);
+          } else {
+            req.body.compra.transaccion = result.ValeElectronico[0].transaccion;
+            req.body.compra.valeElectronico = result.ValeElectronico;
+            return res.json(req.body);
+          }
+        }
+      });
+    });
+  }
+});
+
+// @Route  POST api/compra/tiraAuditoria
+// @Desc   Traer tira de auditoria para imprimir
+// @Access Public
+router.post("/tiraAuditoria", (req, res) => {
+  const errors = {};
+
+  console.log("ingreso a tiraAuditoria:", req.body);
+
+  const isValid = true;
+
+  // Check Validation
+  if (!isValid) {
+    return res.status(400).json(errors);
+  } else {
+    //Ir y consultar usuario
+    const url =
+      "https://osiapppre02.colsanitas.com/services/GestionDocumentoEquivalente.GestionDocumentoEquivalenteHttpSoap12Endpoint?wsdl";
+
+    const input = {
+      codigo_compania: req.body.contrato.codigoCompania,
+      estacion: registrarCompra.codigoEstacion,
+      num_transaccion_docEquiv: req.body.transaccion
+    };
+
+    console.log("Input:", input);
+
+    soap.createClient(url, function(err, client) {
+      if (err) {
+        console.log("Error creando cliente");
+      } else {
+        client.ConsultarTiraAuditora(input, function(err, result) {
+          if (err) {
+            errors.mensaje = err;
+            console.log("Error llamando Servicio TraerTira:", err);
+            return res.status(400).json(errors);
+          } else {
+            result.tira_auditora.textoHtml = result.tira_auditora.texto_tiraAudit.replace(
+              /\n/g,
+              "<br />"
+            );
+
+            console.log(result);
+
+            req.body.tiraAuditora = result.tira_auditora;
+            return res.json(req.body);
+          }
+        });
+      }
+    });
+  }
 });
 
 const calculateLRC = str => {

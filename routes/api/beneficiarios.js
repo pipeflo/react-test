@@ -3,11 +3,14 @@ const soapRequest = require("easy-soap-request");
 const fs = require("fs");
 const router = express.Router();
 const xmlreader = require("xmlreader");
-const { consultaPrecio, registrarCompra } = require("../../config/keys");
+const { consultaPrecio } = require("../../config/keys");
 
 //Beneficiario validator
 const validateConsultaBeneficiario = require("../../validation/consultaBeneficiario");
 const validateConsultaPrecio = require("../../validation/validateConsultaPrecio");
+const {
+  validateConsultaContrato
+} = require("../../validation/validateConsultas");
 
 // @Route  GET api/beneficiarios/test
 // @Desc   Test Users route
@@ -194,6 +197,92 @@ router.post("/consulta", (req, res) => {
   }
 });
 
+// @Route  POST api/beneficiarios/ciudad
+// @Desc   Traer código de ciudad de un contrato
+// @Access Public
+router.post("/ciudad", (req, res) => {
+  const { errors, isValid } = validateConsultaContrato(req.body);
+
+  // Check Validation
+  if (!isValid) {
+    return res.status(400).json(errors);
+  } else {
+    //Ir y consultar usuario
+    const url =
+      "https://osiapppre02.colsanitas.com/services/ProxyContratoMP.ProxyContratoMPHttpSoap12Endpoint";
+    const headers = {
+      "user-agent": "sampleTest",
+      "Content-Type": "text/xml;charset=UTF-8",
+      soapAction: "http://www.colsanitas.com/ContratoMP/consultar"
+    };
+
+    //const xml = fs.readFileSync("test/zipCodeEnvelope.xml", "utf-8");
+    const xml = `<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:con="http://colsanitas.com/ContratoMPServicio/" xmlns:nof="http://colsanitas.com/osi/comun/nofuncionales" xmlns:srv="http://colsanitas.com/osi/srv" xmlns:per="http://colsanitas.com/osi/comun/persona">
+    <soapenv:Header>
+       <con:HeaderRqust>
+          <con:header>
+             <nof:messageHeader>
+                <nof:messageInfo>
+                   <nof:tipoConsulta>2</nof:tipoConsulta>
+                </nof:messageInfo>
+             </nof:messageHeader>
+          </con:header>
+       </con:HeaderRqust>
+    </soapenv:Header>
+    <soapenv:Body>
+       <con:ConsultarEnt>
+          <con:consultarEnt>
+             <srv:Consultar>
+                <srv:producto>${req.body.codigoCompania}</srv:producto>
+                <srv:codigoPlan>${req.body.codigoPlan}</srv:codigoPlan>
+                <srv:numContrato>${req.body.numeroContrato}</srv:numContrato>
+                <srv:numeroFamilia>${req.body.numeroFamilia}</srv:numeroFamilia>
+             </srv:Consultar>
+          </con:consultarEnt>
+       </con:ConsultarEnt>
+    </soapenv:Body>
+ </soapenv:Envelope>`;
+
+    (async () => {
+      try {
+        const { response } = await soapRequest(url, headers, xml, 10000); // Optional timeout parameter(milliseconds)
+        const { body, statusCode } = response;
+
+        xmlreader.read(body, function(err, respuesta) {
+          if (err) return console.log("Error reading XML:", err);
+
+          if (
+            respuesta["s:Envelope"]["s:Header"][
+              "h:HeaderRspns"
+            ].header.responseStatus.businessException.errorDetails.errorCode.text() ===
+            "OK"
+          ) {
+            //encontró contrato
+            let ciudad = {};
+
+            ciudad.codigo = respuesta["s:Envelope"][
+              "s:Body"
+            ].ConsultarSal.consultarSal.contratosMP.Caratula.direccionContrato.ciudad.codigo.text();
+
+            ciudad.descripcion = respuesta["s:Envelope"][
+              "s:Body"
+            ].ConsultarSal.consultarSal.contratosMP.Caratula.direccionContrato.ciudad.descripcion.text();
+
+            req.body.ciudad = ciudad;
+            console.log("Contrato con ciudad:", req.body);
+            return res.json(req.body);
+          } else {
+            errors.mensaje = respuesta["s:Envelope"]["s:Header"][
+              "h:HeaderRspns"
+            ].header.responseStatus.businessException.errorDetails.errorDesc.text();
+            return res.status(400).json(errors);
+          }
+        });
+      } catch (e) {}
+    })();
+  }
+});
+
 // @Route  POST api/beneficiarios/precio
 // @Desc   Consultar un precio de vale para un beneficiario
 // @Access Public
@@ -245,10 +334,12 @@ router.post("/precio", (req, res) => {
                req.body.beneficiario.numeroIdentificacion
              }</com:Documento>
             <com:TipoDocumento>${
-              req.body.beneficiario.codTipoIdentificacion
+              req.body.beneficiario.codTipoIdentificacion.length > 1
+                ? req.body.beneficiario.codTipoIdentificacion
+                : "0" + req.body.beneficiario.codTipoIdentificacion
             }</com:TipoDocumento>
              </srv:documento>
-             <srv:codCiudad>${consultaPrecio.codigoCiudad}</srv:codCiudad>
+             <srv:codCiudad>${req.body.contrato.ciudad.codigo}</srv:codCiudad>
              <srv:cantidad>1</srv:cantidad>
           </precio>
        </ges:ConsultaPrecioEnt>
@@ -282,112 +373,7 @@ router.post("/precio", (req, res) => {
           precio.requierePin = respuesta["soapenv:Envelope"]["soapenv:Body"][
             "ns4:ConsultaPrecioSal"
           ].precioSal.precio["ns2:requierePin"].text();
-          res.json(precio);
-        });
-      } catch (e) {
-        console.log("Error:", e);
-      }
-    })();
-  }
-});
-
-// @Route  POST api/beneficiarios/registrar
-// @Desc   Registrar compra
-// @Access Public
-router.post("/registrar", (req, res) => {
-  //const { errors, isValid } = validateConsultaPrecio(req.body);
-
-  const isValid = true;
-
-  // Check Validation
-  if (!isValid) {
-    return res.status(400).json(errors);
-  } else {
-    //Ir y consultar usuario
-    const url =
-      "https://osiapppre02.colsanitas.com/services/ValeElectronico.ValeElectronicoHttpSoap11Endpoint";
-    const headers = {
-      "user-agent": "sampleTest",
-      "Content-Type": "text/xml;charset=UTF-8",
-      soapAction: "urn:registrar"
-    };
-
-    const xml = `<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:val="http://www.colsanitas.com/schema/dss/aseguradoras/ValeElectronico">
-    <soapenv:Header/>
-    <soapenv:Body>
-       <val:registrar>
-          <val:canal>${registrarCompra.canal}</val:canal>
-          <val:ciudad>${registrarCompra.codigoCiudad}</val:ciudad>
-          <val:codigoCompania>${
-            req.body.compra.contrato.codigoCompania
-          }</val:codigoCompania>
-          <val:codigoConcepto>${
-            registrarCompra.codigoConcepto
-          }</val:codigoConcepto>
-          <val:codigoEstacion>${
-            registrarCompra.codigoEstacion
-          }</val:codigoEstacion>
-          <val:tipoDocUsuario>${
-            req.body.beneficiario.codTipoDocumento
-          }</val:tipoDocUsuario>
-          <val:documentoIdentUsu>${
-            req.body.beneficiario.numeroIdentificacion
-          }</val:documentoIdentUsu>
-          <val:contrato>${
-            req.body.compra.contrato.numeroContrato
-          }</val:contrato>
-          <val:plan>${req.body.compra.contrato.codigoPlan}</val:plan>
-          <val:familia>${req.body.compra.contrato.numeroFamilia}</val:familia>
-          <val:usuario>${
-            req.body.compra.contrato.codigoTipoUsuario
-          }</val:usuario>
-          <val:numerTransaccion>${
-            req.body.compra.numeroTransaccion
-          }</val:numerTransaccion>
-          <val:cantidad>${req.body.compra.cantidad}</val:cantidad>
-          <val:valorTotalTrx>${req.body.compra.valorTotal}</val:valorTotalTrx>
-          <val:mediosDePago>5,${req.body.compra.valorTotal},0,0,D,0,${
-      req.body.compra.numeroAprobacion
-    }</val:mediosDePago>
-          <val:aplicacionAsigna>${
-            registrarCompra.aplicacionAsigna
-          }</val:aplicacionAsigna>
-          <val:vales>0</val:vales>
-          <val:categoria></val:categoria>
-          <val:documentoIdentPrest></val:documentoIdentPrest>
-          <val:servicio></val:servicio>
-          <val:viaIngreso></val:viaIngreso>
-          <val:estado>2</val:estado>
-          <val:tipoDocPrest></val:tipoDocPrest>
-       </val:registrar>
-    </soapenv:Body>
- </soapenv:Envelope>`;
-
-    (async () => {
-      try {
-        const { response } = await soapRequest(url, headers, xml, 10000); // Optional timeout parameter(milliseconds)
-        const { body, statusCode } = response;
-
-        xmlreader.read(body, function(err, respuesta) {
-          if (err) return console.log("Error reading XML:", err);
-
-          let precio = {};
-
-          precio.valorTotal = respuesta["soapenv:Envelope"]["soapenv:Body"][
-            "ns4:ConsultaPrecioSal"
-          ].precioSal.precio.precio["ns1:valorTotal"].text();
-          precio.valorIVA = respuesta["soapenv:Envelope"]["soapenv:Body"][
-            "ns4:ConsultaPrecioSal"
-          ].precioSal.precio.precio["ns1:valorIVA"].text();
-          precio.valorBase = respuesta["soapenv:Envelope"]["soapenv:Body"][
-            "ns4:ConsultaPrecioSal"
-          ].precioSal.precio["ns2:valorBase"].text();
-          precio.descuento = respuesta["soapenv:Envelope"]["soapenv:Body"][
-            "ns4:ConsultaPrecioSal"
-          ].precioSal.precio["ns2:descuento"].text();
-          precio.requierePin = respuesta["soapenv:Envelope"]["soapenv:Body"][
-            "ns4:ConsultaPrecioSal"
-          ].precioSal.precio["ns2:requierePin"].text();
+          console.log(precio);
           res.json(precio);
         });
       } catch (e) {

@@ -1,7 +1,8 @@
 import {
   SET_BENEFICIARIO,
   BENEFICIARIO_LOADING,
-  BORRAR_BENEFICIARIO_ACTUAL
+  BORRAR_BENEFICIARIO_ACTUAL,
+  SET_TIPO_IDENTIFICACION_BENEFICIARIO
 } from "../actions/types";
 
 const initialState = {
@@ -25,10 +26,15 @@ export default function(state = initialState, action) {
         ...initialState
       };
     case SET_BENEFICIARIO:
-      console.log(action.payload);
       return {
         ...action.payload,
         cargando: false
+      };
+    case SET_TIPO_IDENTIFICACION_BENEFICIARIO:
+      return {
+        ...state,
+        tipoIdentificacion: action.payload.tipoIdentificacion,
+        codTipoIdentificacion: action.payload.codTipoIdentificacion
       };
     default:
       return state;

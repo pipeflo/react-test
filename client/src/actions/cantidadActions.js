@@ -3,7 +3,7 @@ import { GET_ERRORS } from "./types";
 import { SET_DATOS_COMPRA } from "./types";
 
 //
-export const iniciarCompra = (compraData, history) => dispatch => {
+export const iniciarCompra = compraData => dispatch => {
   //Llamar API para crear archivo de compra para enviar al datafono
   axios
     .post("/api/compra/iniciar", compraData)

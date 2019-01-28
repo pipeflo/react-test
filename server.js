@@ -9,6 +9,7 @@ const users = require("./routes/api/users");
 const beneficiarios = require("./routes/api/beneficiarios");
 const compra = require("./routes/api/compra");
 const configuracion = require("./routes/api/configuracion");
+const tiposIdentificacion = require("./routes/api/tiposIdentificacion");
 
 const app = express();
 
@@ -55,7 +56,8 @@ wss.on("connection", ws => {
                     message: `La compra ha sido exitosa con el número de aprobación ${
                       resultadoTransaccion[1]
                     }`,
-                    pagoExitoso: true
+                    pagoExitoso: true,
+                    numeroAprobacion: resultadoTransaccion[1]
                   })
                 );
                 break;
@@ -126,6 +128,7 @@ app.use("/api/users", users);
 app.use("/api/beneficiarios", beneficiarios);
 app.use("/api/compra", compra);
 app.use("/api/configuracion", configuracion);
+app.use("/api/tiposIdentificacion", tiposIdentificacion);
 
 const port = process.env.port || 5000;
 

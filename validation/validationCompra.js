@@ -6,7 +6,7 @@ module.exports = function validateCompra(data) {
 
   data.cantidad = !isEmpty(data.cantidad) ? data.cantidad : "";
 
-  if (Validator.isEmpty(data.cantidad)) {
+  if (Validator.isEmpty(data.cantidad.toString())) {
     errors.cantidad = "La cantidad de Vales debe ser mayor a 0";
   }
 

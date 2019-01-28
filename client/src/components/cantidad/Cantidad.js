@@ -10,15 +10,16 @@ class Cantidad extends Component {
     super();
     this.state = {
       beneficiario: {},
-      compra: {},
-      cantidad: 0,
-      valorTotal: 0,
+      compra: {
+        contrato: {},
+        cantidad: 0,
+        valorTotal: 0
+      },
       errors: {}
     };
   }
 
   componentDidMount() {
-    console.log(this.props.compra.valorVale);
     if (this.props.compra.valorVale === 0) {
       this.props.history.push("/identificacion");
     }
@@ -26,7 +27,6 @@ class Cantidad extends Component {
       beneficiario: this.props.beneficiario,
       compra: this.props.compra
     });
-    console.log("si entró con props", this.props);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -55,37 +55,37 @@ class Cantidad extends Component {
   onClick = e => {
     e.preventDefault();
     if (e.target.value === "BORRAR") {
-      this.setState({ cantidad: 0 });
+      let compra = Object.assign({}, this.state.compra); //creating copy of object
+      compra.cantidad = 0; //updating value
+      this.setState({ compra });
     } else if (e.target.value === "ACEPTAR") {
       console.log("Iniciar compra para ", this.state.compra.cantidad, "vales");
       const compraData = {
-        cantidad: this.state.cantidad,
+        cantidad: this.state.compra.cantidad,
         valorVale: this.state.compra.valorVale,
         valorTotal:
-          parseInt(this.state.cantidad) * parseInt(this.state.compra.valorVale)
+          parseInt(this.state.compra.cantidad) *
+          parseInt(this.state.compra.valorVale)
       };
 
       this.props.iniciarCompra(compraData);
     } else if (e.target.value === "SALIR") {
       this.props.reiniciarCompra({});
     } else {
-      if (this.state.cantidad === 0) {
-        this.setState({
-          cantidad: e.target.value
-        });
+      if (this.state.compra.cantidad === 0) {
+        let compra = Object.assign({}, this.state.compra); //creating copy of object
+        compra.cantidad = e.target.value; //updating value
+        this.setState({ compra });
       } else {
-        this.setState({
-          cantidad: this.state.cantidad + e.target.value
-        });
+        let compra = Object.assign({}, this.state.compra); //creating copy of object
+        compra.cantidad = this.state.compra.cantidad + e.target.value; //updating value
+        this.setState({ compra });
       }
     }
   };
 
   render() {
-    const { errors } = this.state;
-    const { beneficiario } = this.state;
-    const compra = this.props.compra;
-    const cantidad = this.state.cantidad;
+    const { errors, beneficiario, compra } = this.state;
     const styleNumber = {
       width: "75px",
       height: "75px",
@@ -110,10 +110,10 @@ class Cantidad extends Component {
         </p>
         <hr id="hr_1" color="white" size="2" width="600" />
         <p id="vale">Valor del vale: ${compra.valorVale}</p>
-        <p id="cantidad">Cantidad: {cantidad}</p>
+        <p id="cantidad">Cantidad: {compra.cantidad}</p>
         <hr id="hr_2" color="white" size="2" width="600" />
         <p id="total">
-          TOTAL: ${parseInt(cantidad) * parseInt(compra.valorVale)}
+          TOTAL: ${parseInt(compra.cantidad) * parseInt(compra.valorVale)}
         </p>
         <p id="tcompra">Indique el número de vales a comprar</p>
         <img id="imarkCantidad" src="../../img/input_mark.png" alt="" />
@@ -125,7 +125,7 @@ class Cantidad extends Component {
           id="usrCantidad"
           placeholder="Cantidad de Vales"
           name="cantidad"
-          value={this.state.cantidad}
+          value={this.state.compra.cantidad}
           onChange={this.onChange}
           onKeyPress={this.onKeyPress}
         />
