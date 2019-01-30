@@ -9,6 +9,7 @@ import {
   registrarCompra,
   consultarTiraAuditoria
 } from "../../actions/compraActions";
+import { iniciarCompra } from "../../actions/cantidadActions";
 import Spinner from "../common/Spinner";
 
 class Compra extends Component {
@@ -93,15 +94,19 @@ class Compra extends Component {
     //this.setState({ count: this.state.count + result.movement });
     const respuesta = JSON.parse(data);
     console.log("Respuesta:", respuesta);
-    this.setState({
-      data: respuesta.message,
-      pagoExitoso: respuesta.pagoExitoso,
-      show: true
-    });
-    if (this.state.pagoExitoso) {
-      let compra = Object.assign({}, this.state.compra); //creating copy of object
-      compra.numeroAprobacion = respuesta.numeroAprobacion;
-      this.props.registrarCompra(this.state.beneficiario, compra);
+    if (respuesta.reintentar) {
+      this.props.iniciarCompra(this.props.compra);
+    } else {
+      this.setState({
+        data: respuesta.message,
+        pagoExitoso: respuesta.pagoExitoso,
+        show: true
+      });
+      if (this.state.pagoExitoso) {
+        let compra = Object.assign({}, this.state.compra); //creating copy of object
+        compra.numeroAprobacion = respuesta.numeroAprobacion;
+        this.props.registrarCompra(this.state.beneficiario, compra);
+      }
     }
   }
 
@@ -287,6 +292,7 @@ Compra.propTypes = {
   reiniciarCompra: PropTypes.func.isRequired,
   registrarCompra: PropTypes.func.isRequired,
   consultarTiraAuditoria: PropTypes.func.isRequired,
+  iniciarCompra: PropTypes.func.isRequired,
   beneficiario: PropTypes.object.isRequired,
   compra: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired
@@ -300,5 +306,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { reiniciarCompra, registrarCompra, consultarTiraAuditoria }
+  { reiniciarCompra, registrarCompra, consultarTiraAuditoria, iniciarCompra }
 )(Compra);
