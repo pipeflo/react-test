@@ -60,6 +60,14 @@
   width: 70%;
 }
 
+#error_message_cancelados {
+  position: absolute;
+  left: 10px;
+  font-size: 26px;
+  color: #161e73;
+  width: 600px;
+}
+
 #tdocumento {
   position: absolute;
   top: 250px;

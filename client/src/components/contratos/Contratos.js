@@ -206,10 +206,10 @@ class Contratos extends Component {
           <p id="nombre_cliente">{nombre}</p>
           <p id="contrato">Seleccione el contrato al que aplique la compra</p>
           <div className="form-group" id="contract_1">
-            <p className="error-message">
+            <div id="error_message_cancelados" className="alert alert-info">
               Contrato cancelado acérquese a Asesoría integral o comuníquese a
               la Línea Nro. 4871920
-            </p>
+            </div>
           </div>
           <Button
             id="home_button"
