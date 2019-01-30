@@ -114,7 +114,8 @@ class Compra extends Component {
     e.preventDefault();
 
     if (e.target.value === "REINTENTAR") {
-      this.props.history.push("/cantidad");
+      //this.props.history.push("/cantidad");
+      this.props.iniciarCompra(this.props.compra);
     } else if (e.target.value === "IMPRIMIR") {
       console.log("Vamos a imprimir");
       this.props.consultarTiraAuditoria(this.props.compra);
