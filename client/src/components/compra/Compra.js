@@ -168,7 +168,7 @@ class Compra extends Component {
               height: "101px"
             }}
             onClick={this.handleClose}
-            value="CANCELAR"
+            value="SALIR"
           />
           <Button
             id="reintentar"
