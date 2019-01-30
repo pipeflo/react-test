@@ -9,6 +9,7 @@ const initialState = {
   nombre: "",
   tipoIdentificacion: "",
   codTipoIdentificacion: "",
+  tipoIdentificacionNombre: "",
   numeroIdentificacion: "",
   contratos: [],
   cargando: false
@@ -18,7 +19,7 @@ export default function(state = initialState, action) {
   switch (action.type) {
     case BENEFICIARIO_LOADING:
       return {
-        ...initialState,
+        ...state,
         cargando: action.payload
       };
     case BORRAR_BENEFICIARIO_ACTUAL:
@@ -34,7 +35,8 @@ export default function(state = initialState, action) {
       return {
         ...state,
         tipoIdentificacion: action.payload.tipoIdentificacion,
-        codTipoIdentificacion: action.payload.codTipoIdentificacion
+        codTipoIdentificacion: action.payload.codTipoIdentificacion,
+        tipoIdentificacionNombre: action.payload.descripcion
       };
     default:
       return state;

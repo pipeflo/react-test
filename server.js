@@ -65,7 +65,16 @@ wss.on("connection", ws => {
                 //Transacción Rechazada
                 ws.send(
                   JSON.stringify({
-                    message: `La compra NO se ha realizado. Fue rechazada por su entidad bancaria`,
+                    message: `La compra NO se ha realizado. Fue rechazada por su entidad bancaria o cancelada manualmente.`,
+                    pagoExitoso: false
+                  })
+                );
+                break;
+              case "03":
+                //Error comunicación datafono o tiempo de espera
+                ws.send(
+                  JSON.stringify({
+                    message: `La compra NO se ha realizado. No se obtuvo una respuesta del Datafono, por favor intente de nuevo.`,
                     pagoExitoso: false
                   })
                 );
@@ -74,7 +83,7 @@ wss.on("connection", ws => {
                 //Error comunicación datafono o tiempo de espera
                 ws.send(
                   JSON.stringify({
-                    message: `La compra NO se ha realizado. Ha tardado mucho tiempo en iniciar la compra en el datafono`,
+                    message: `La compra NO se ha realizado. Ha tardado mucho tiempo en iniciar la compra en el datafono.`,
                     pagoExitoso: false
                   })
                 );
@@ -82,7 +91,10 @@ wss.on("connection", ws => {
               default:
                 //Comportamiento no esperado
                 ws.send(
-                  `La compra NO se ha realizado. Se ha presentado un error inesperado, por favor intente de nuevo.`
+                  JSON.stringify({
+                    message: `La compra NO se ha realizado. Se ha presentado un error inesperado en el Datafono, por favor intente de nuevo.`,
+                    pagoExitoso: false
+                  })
                 );
                 break;
             }

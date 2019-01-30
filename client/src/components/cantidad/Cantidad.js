@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import classnames from "classnames";
+import { Button } from "react-bootstrap";
 import { connect } from "react-redux";
 import { iniciarCompra } from "../../actions/cantidadActions";
 import { reiniciarCompra } from "../../actions/identificacionActions";
@@ -86,12 +87,13 @@ class Cantidad extends Component {
 
   render() {
     const { errors, beneficiario, compra } = this.state;
-    const styleNumber = {
-      width: "75px",
-      height: "75px",
+    const numeroStyle = {
+      width: "120px",
+      height: "120px",
       marginBottom: "20px",
       marginRight: "20px",
-      fontSize: "45px"
+      fontSize: "45px",
+      backgroundSize: "cover"
     };
 
     return (
@@ -133,128 +135,97 @@ class Cantidad extends Component {
           <div className="invalid-feedback">{errors.cantidad}</div>
         )}
         <div id="keyboardCantidad" className="form-group">
-          <input
-            style={styleNumber}
-            type="button"
-            className="btn btn-primary"
+          <Button
+            id="uno"
+            style={numeroStyle}
+            onClick={this.onClick}
             value="1"
-            onClick={this.onClick}
           />
-          <input
-            style={styleNumber}
-            type="button"
-            className="btn btn-primary"
+          <Button
+            id="dos"
+            style={numeroStyle}
+            onClick={this.onClick}
             value="2"
-            onClick={this.onClick}
           />
-          <input
-            style={styleNumber}
-            type="button"
-            className="btn btn-primary"
+          <Button
+            id="tres"
+            style={numeroStyle}
+            onClick={this.onClick}
             value="3"
-            onClick={this.onClick}
           />
-          <br />
-          <input
-            style={styleNumber}
-            type="button"
-            className="btn btn-primary"
+          <Button
+            id="cuatro"
+            style={numeroStyle}
+            onClick={this.onClick}
             value="4"
-            onClick={this.onClick}
           />
-          <input
-            style={styleNumber}
-            type="button"
-            className="btn btn-primary"
+          <Button
+            id="cinco"
+            style={numeroStyle}
+            onClick={this.onClick}
             value="5"
-            onClick={this.onClick}
           />
-          <input
-            style={styleNumber}
-            type="button"
-            className="btn btn-primary"
+          <Button
+            id="seis"
+            style={numeroStyle}
+            onClick={this.onClick}
             value="6"
-            onClick={this.onClick}
           />
-          <br />
-          <input
-            style={styleNumber}
-            type="button"
-            className="btn btn-primary"
+          <Button
+            id="siete"
+            style={numeroStyle}
+            onClick={this.onClick}
             value="7"
-            onClick={this.onClick}
           />
-          <input
-            style={styleNumber}
-            type="button"
-            className="btn btn-primary"
+          <Button
+            id="ocho"
+            style={numeroStyle}
+            onClick={this.onClick}
             value="8"
-            onClick={this.onClick}
           />
-          <input
-            style={styleNumber}
-            type="button"
-            className="btn btn-primary"
+          <Button
+            id="nueve"
+            style={numeroStyle}
+            onClick={this.onClick}
             value="9"
+          />
+
+          <Button
+            id="cero"
+            style={numeroStyle}
             onClick={this.onClick}
-          />
-          <br />
-          <button
-            id="invisible"
-            style={{
-              width: "75px",
-              height: "75px",
-              marginBottom: "3px",
-              marginRight: "20px"
-            }}
-            type="button"
-            className="btn btn-primary"
-          />
-          <input
-            style={{
-              width: "75px",
-              height: "75px",
-              marginBottom: "3px",
-              marginRight: "20px",
-              fontSize: "45px"
-            }}
-            type="button"
-            className="btn btn-primary"
             value="0"
-            onClick={this.onClick}
-          />
-          <button
-            id="invisible"
-            style={{ width: "75px", height: "75px", marginBottom: "3px" }}
-            type="button"
-            className="btn btn-primary"
           />
         </div>
-        <div className="form-group" id="keyboard_2">
-          <input
-            style={{ width: "312px", height: "75px", fontSize: "40px" }}
-            type="button"
-            className="btn btn-primary"
-            value="ACEPTAR"
+        <div id="aceptar_borrar_cantidad">
+          <Button
+            id="borrar_button"
+            style={{
+              width: "263px",
+              height: "90px"
+            }}
             onClick={this.onClick}
-          />
-          <input
-            style={{ width: "312px", height: "75px", fontSize: "40px" }}
-            type="button"
-            className="btn btn-primary"
             value="BORRAR"
+          />
+          <Button
+            id="aceptar_button"
+            style={{
+              width: "263px",
+              height: "101px"
+            }}
             onClick={this.onClick}
+            value="ACEPTAR"
           />
         </div>
-        <div className="form-group" id="keyboard_2Cantidad">
-          <input
-            style={{ width: "312px", height: "75px", fontSize: "40px" }}
-            type="button"
-            className="btn btn-primary"
-            value="SALIR"
-            onClick={this.onClick}
-          />
-        </div>
+        <Button
+          id="home_button"
+          style={{
+            width: "250px",
+            height: "101px"
+          }}
+          onClick={this.onClick}
+          value="SALIR"
+        />
       </div>
     );
   }

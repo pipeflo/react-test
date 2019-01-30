@@ -12,11 +12,11 @@ module.exports = function validateConsultaBeneficiario(data) {
     : "";
 
   if (Validator.isEmpty(data.numeroIdentificacion)) {
-    errors.numeroIdentificacion = "Se requiere de un número de Identificación";
+    errors.numeroIdentificacion = "Se requiere de un número de Identificación.";
   }
 
   if (Validator.isEmpty(data.tipoIdentificacion)) {
-    errors.tipoIdentificacion = "Se requiere del tipo de Identificación";
+    errors.tipoIdentificacion = "Se requiere del tipo de Identificación.";
   }
 
   return {

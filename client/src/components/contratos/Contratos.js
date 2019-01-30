@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
+import { Button } from "react-bootstrap";
 import { connect } from "react-redux";
 import { agregarContrato } from "../../actions/contratosActions";
 import { reiniciarCompra } from "../../actions/identificacionActions";
@@ -80,7 +81,7 @@ class Contratos extends Component {
 
   onClick(e) {
     e.preventDefault();
-    if (e.target.getAttribute("value") === "CANCELAR") {
+    if (e.target.getAttribute("value") === "SALIR") {
       this.props.reiniciarCompra({});
     } else {
       const indexContrato = e.target.getAttribute("value");
@@ -105,6 +106,7 @@ class Contratos extends Component {
     const contratoSinCompra = this.state.contratoSinOpcionDeCompra;
     const funciones = { onClick: this.onClick };
     let activos = 0;
+    const styleContratos = { fontWeight: "bold" };
     let htmlContratos = this.props.beneficiario.contratos.map(function(
       contrato,
       i
@@ -116,27 +118,33 @@ class Contratos extends Component {
             key={contrato.numeroContrato}
             style={{
               width: "250px",
-              height: "180px",
+              height: "250px",
               marginBottom: "30px",
               marginRight: "30px",
               fontSize: "18px",
               textAlign: "left",
-              alignContent: "center"
+              alignContent: "center",
+              color: "black"
             }}
             value={i}
-            className="btn btn-primary"
+            className="btn btn-primary boton_contrato"
             onClick={funciones.onClick}
             to="#"
           >
-            Producto: {contrato.nombreCompania}
             <br />
-            Plan: {contrato.nombrePlan}
             <br />
-            No. Contrato: {contrato.numeroContrato}
+            <span style={styleContratos}>Producto: </span>{" "}
+            <span style={{ color: "blue" }}>{contrato.nombreCompania}</span>
             <br />
-            Familia: {contrato.numeroFamilia}
+            <span style={styleContratos}>Plan:</span> {contrato.nombrePlan}
             <br />
-            Estado: {contrato.estadoUsuario}
+            <span style={styleContratos}>No. Contrato:</span>{" "}
+            {contrato.numeroContrato}
+            <br />
+            <span style={styleContratos}>Familia:</span>{" "}
+            {contrato.numeroFamilia}
+            <br />
+            <span style={styleContratos}>Estado:</span> {contrato.estadoUsuario}
           </Link>
         );
       } else {
@@ -159,24 +167,24 @@ class Contratos extends Component {
           <p id="nombre_cliente">{nombre}</p>
           <p id="contrato">Seleccione el contrato al que aplique la compra</p>
           {contratoSinCompra ? (
-            <p id="contratoSinCompra" className="message-error">
+            <div id="error_message_contratos" className="alert alert-info">
               El contrato seleccionado no requiere de la compra de Vales.
-            </p>
+            </div>
           ) : (
             ""
           )}
           <div className="form-group" id="contract_1">
             {htmlContratos}
           </div>
-          <div className="form-group" id="keyboard_2">
-            <input
-              style={{ width: "312px", height: "75px", fontSize: "40px" }}
-              type="button"
-              className="btn btn-primary"
-              value="CANCELAR"
-              onClick={this.onClick}
-            />
-          </div>
+          <Button
+            id="home_button"
+            style={{
+              width: "250px",
+              height: "101px"
+            }}
+            onClick={this.onClick}
+            value="SALIR"
+          />
         </div>
       );
     } else {
@@ -197,15 +205,15 @@ class Contratos extends Component {
               la Línea Nro. 4871920
             </p>
           </div>
-          <div className="form-group" id="keyboard_2">
-            <input
-              style={{ width: "312px", height: "75px", fontSize: "40px" }}
-              type="button"
-              className="btn btn-primary"
-              value="CANCELAR"
-              onClick={this.onClick}
-            />
-          </div>
+          <Button
+            id="home_button"
+            style={{
+              width: "250px",
+              height: "101px"
+            }}
+            onClick={this.onClick}
+            value="SALIR"
+          />
         </div>
       );
     }

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Modal, Button } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 import PropTypes from "prop-types";
 import Websocket from "react-websocket";
 import { Link } from "react-router-dom";
@@ -113,9 +113,7 @@ class Compra extends Component {
     } else if (e.target.value === "IMPRIMIR") {
       console.log("Vamos a imprimir");
       this.props.consultarTiraAuditoria(this.props.compra);
-    } else if (e.target.value === "TEST") {
-      this.PrintElem("tira");
-    } else {
+    } else if (e.target.value === "SALIR") {
       this.props.reiniciarCompra({});
     }
   }
@@ -181,9 +179,7 @@ class Compra extends Component {
             className="btn btn-primary"
             onClick={this.handleClose}
             value="REINTENTAR"
-          >
-            Reintentar
-          </Button>
+          />
         </div>
       );
     }
@@ -194,7 +190,7 @@ class Compra extends Component {
           id="instrucciones"
           src="../../img/instrucciones.jpg"
           width="80%"
-          height="1000px"
+          height="950px"
           alt=""
         />
       );
@@ -257,6 +253,15 @@ class Compra extends Component {
             </div>
           </div>
         </div>
+        <Button
+          id="home_button_compra"
+          style={{
+            width: "250px",
+            height: "101px"
+          }}
+          onClick={this.handleClose}
+          value="SALIR"
+        />
 
         <div id="tira" style={{ display: "none" }}>
           <p dangerouslySetInnerHTML={{ __html: textoTiraAuditora }} />

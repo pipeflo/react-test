@@ -186,10 +186,31 @@ router.post("/consulta", (req, res) => {
               return res.json(beneficiario);
             }
           } else {
-            errors.mensaje = respuesta["s:Envelope"]["s:Header"][
-              "h:HeaderRspns"
-            ].header.responseStatus.businessException.errorDetails.errorDesc.text();
-            return res.status(400).json(errors);
+            console.log(
+              "ErroCode:",
+              respuesta["s:Envelope"]["s:Header"][
+                "h:HeaderRspns"
+              ].header.responseStatus.businessException.errorDetails.errorCode.text()
+            );
+            if (
+              (errors.mensaje =
+                respuesta["s:Envelope"]["s:Header"][
+                  "h:HeaderRspns"
+                ].header.responseStatus.businessException.errorDetails.errorCode.text() ===
+                "Con01")
+            ) {
+              errors.mensaje = `No se encontró una persona con ${
+                req.body.tipoIdentificacionNombre
+              } número ${
+                req.body.numeroIdentificacion
+              }. Por favor verifique la información ingresada.`;
+              return res.status(400).json(errors);
+            } else {
+              errors.mensaje = respuesta["s:Envelope"]["s:Header"][
+                "h:HeaderRspns"
+              ].header.responseStatus.businessException.errorDetails.errorDesc.text();
+              return res.status(400).json(errors);
+            }
           }
         });
       } catch (e) {}

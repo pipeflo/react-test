@@ -1,8 +1,12 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import { Button } from "react-bootstrap";
 import classnames from "classnames";
 import { connect } from "react-redux";
-import { buscarBenediciario } from "../../actions/identificacionActions";
+import {
+  buscarBenediciario,
+  reiniciarCompra
+} from "../../actions/identificacionActions";
 import Spinner from "../common/Spinner";
 
 class Identificacion extends Component {
@@ -12,6 +16,7 @@ class Identificacion extends Component {
       nombre: "",
       tipoIdentificacion: "",
       codTipoIdentificacion: "",
+      tipoIdentificacionNombre: "",
       numeroIdentificacion: "",
       contratos: [],
       cargando: false,
@@ -26,7 +31,9 @@ class Identificacion extends Component {
     } else {
       this.setState({
         codTipoIdentificacion: this.props.beneficiario.codTipoIdentificacion,
-        tipoIdentificacion: this.props.beneficiario.tipoIdentificacion
+        tipoIdentificacion: this.props.beneficiario.tipoIdentificacion,
+        tipoIdentificacionNombre: this.props.beneficiario
+          .tipoIdentificacionNombre
       });
     }
   }
@@ -38,6 +45,10 @@ class Identificacion extends Component {
 
     if (nextProps.beneficiario.contratos.length > 0) {
       this.props.history.push("/contratos");
+    }
+
+    if (!nextProps.beneficiario.tipoIdentificacion) {
+      this.props.history.push("/");
     }
   }
 
@@ -69,10 +80,13 @@ class Identificacion extends Component {
       const identificacionData = {
         numeroIdentificacion: this.state.numeroIdentificacion,
         tipoIdentificacion: this.state.tipoIdentificacion,
-        codTipoIdentificacion: this.state.codTipoIdentificacion
+        codTipoIdentificacion: this.state.codTipoIdentificacion,
+        tipoIdentificacionNombre: this.state.tipoIdentificacionNombre
       };
 
       this.props.buscarBenediciario(identificacionData);
+    } else if (e.target.value === "SALIR") {
+      this.props.reiniciarCompra({});
     } else {
       this.setState({
         numeroIdentificacion: this.state.numeroIdentificacion + e.target.value
@@ -84,12 +98,13 @@ class Identificacion extends Component {
     const { errors } = this.state;
     const { cargando } = this.props.beneficiario;
 
-    let numeroStyle = {
-      width: "75px",
-      height: "75px",
+    const numeroStyle = {
+      width: "120px",
+      height: "120px",
       marginBottom: "20px",
       marginRight: "20px",
-      fontSize: "45px"
+      fontSize: "45px",
+      backgroundSize: "cover"
     };
 
     let contenido;
@@ -117,48 +132,17 @@ class Identificacion extends Component {
             height="1366"
             alt=""
           />
-          <p id="tdocumento">Escoja su tipo de documento</p>
-          <div className="row text-center" id="checkbox_1">
-            <label id="checkbox" htmlFor="primary" className="btn btn-primary">
-              Cédula de Ciudadanía{" "}
-              <input
-                type="radio"
-                id="primary"
-                className="badgebox"
-                value="CC"
-                checked={this.state.tipoIdentificacion === "CC"}
-                onChange={this.handleChange}
-              />
-              <span className="badge">&#10004;</span>
-            </label>
-            <label id="checkbox" htmlFor="second" className="btn btn-primary">
-              Cédula de Extranjería{" "}
-              <input
-                type="radio"
-                id="second"
-                className="badgebox"
-                value="CE"
-                checked={this.state.tipoIdentificacion === "CE"}
-                onChange={this.handleChange}
-              />
-              <span className="badge">&#10004;</span>
-            </label>
-            <label id="checkbox" htmlFor="third" className="btn btn-primary">
-              Nit{" "}
-              <input
-                type="checkbox"
-                id="third"
-                className="badgebox"
-                value="NIT"
-                checked={this.state.tipoIdentificacion === "NIT"}
-                onChange={this.handleChange}
-              />
-              <span className="badge">&#10004;</span>
-            </label>
-            {errors.tipoIdentificacion && (
-              <div className="error-message">{errors.tipoIdentificacion}</div>
-            )}
-          </div>
+
+          {errors.numeroIdentificacion && (
+            <div id="error_message" className="alert alert-info">
+              {errors.numeroIdentificacion}
+            </div>
+          )}
+          {errors.mensaje && (
+            <div id="error_message" className="alert alert-info">
+              {errors.mensaje}
+            </div>
+          )}
 
           <p id="tcedula">Digite su número de Identificación</p>
           <img id="imark" src="../../img/input_mark.png" alt="" />
@@ -170,145 +154,106 @@ class Identificacion extends Component {
                 "is-invalid": errors.numeroIdentificacion
               })}
               id="usr"
-              placeholder="Identificación"
+              placeholder=""
               name="identificacion"
               value={this.state.numeroIdentificacion}
               onChange={this.onChange}
               onKeyPress={this.onKeyPress}
             />
           </label>
-          {errors.numeroIdentificacion && (
-            <div className="error-message" id="error-identificacion">
-              {errors.numeroIdentificacion}
-            </div>
-          )}
-          {errors.mensaje && (
-            <div className="error-message" id="error-identificacion">
-              {errors.mensaje}
-            </div>
-          )}
+
           <div id="keyboard" className="form-group">
-            <input
+            <Button
+              id="uno"
               style={numeroStyle}
-              type="button"
-              className="btn btn-primary"
+              onClick={this.onClick}
               value="1"
-              onClick={this.onClick}
             />
-            <input
+            <Button
+              id="dos"
               style={numeroStyle}
-              type="button"
-              className="btn btn-primary"
+              onClick={this.onClick}
               value="2"
-              onClick={this.onClick}
             />
-            <input
+            <Button
+              id="tres"
               style={numeroStyle}
-              type="button"
-              className="btn btn-primary"
+              onClick={this.onClick}
               value="3"
-              onClick={this.onClick}
             />
-            <br />
-            <input
+            <Button
+              id="cuatro"
               style={numeroStyle}
-              type="button"
-              className="btn btn-primary"
+              onClick={this.onClick}
               value="4"
-              onClick={this.onClick}
             />
-            <input
+            <Button
+              id="cinco"
               style={numeroStyle}
-              type="button"
-              className="btn btn-primary"
+              onClick={this.onClick}
               value="5"
-              onClick={this.onClick}
             />
-            <input
+            <Button
+              id="seis"
               style={numeroStyle}
-              type="button"
-              className="btn btn-primary"
+              onClick={this.onClick}
               value="6"
-              onClick={this.onClick}
             />
-            <br />
-            <input
+            <Button
+              id="siete"
               style={numeroStyle}
-              type="button"
-              className="btn btn-primary"
+              onClick={this.onClick}
               value="7"
-              onClick={this.onClick}
             />
-            <input
+            <Button
+              id="ocho"
               style={numeroStyle}
-              type="button"
-              className="btn btn-primary"
+              onClick={this.onClick}
               value="8"
-              onClick={this.onClick}
             />
-            <input
+            <Button
+              id="nueve"
               style={numeroStyle}
-              type="button"
-              className="btn btn-primary"
+              onClick={this.onClick}
               value="9"
-              onClick={this.onClick}
             />
-            <br />
-            <button
-              id="invisible"
-              style={{
-                width: "75px",
-                height: "75px",
-                marginBottom: "3px",
-                marginRight: "20px"
-              }}
-              type="button"
-              className="btn btn-primary"
-            >
-              0
-            </button>
-            <input
+
+            <Button
+              id="cero"
               style={numeroStyle}
-              type="button"
-              className="btn btn-primary"
+              onClick={this.onClick}
               value="0"
-              onClick={this.onClick}
             />
-            <button
-              id="invisible"
-              style={{
-                width: "75px",
-                height: "75px",
-                marginBottom: "3px"
-              }}
-              type="button"
-              className="btn btn-primary"
-            >
-              0
-            </button>
           </div>
-          <div className="form-group" id="keyboard_2">
-            <input
+          <div id="aceptar_borrar">
+            <Button
+              id="borrar_button"
               style={{
-                width: "312px",
-                height: "75px",
-                marginBottom: "3px",
-                fontSize: "40px"
+                width: "263px",
+                height: "90px"
               }}
-              type="button"
-              className="btn btn-primary"
-              value="ACEPTAR"
               onClick={this.onClick}
-            />
-            <br />
-            <input
-              style={{ width: "312px", height: "75px", fontSize: "40px" }}
-              type="button"
-              className="btn btn-primary"
               value="BORRAR"
+            />
+            <Button
+              id="aceptar_button"
+              style={{
+                width: "263px",
+                height: "101px"
+              }}
               onClick={this.onClick}
+              value="ACEPTAR"
             />
           </div>
+          <Button
+            id="home_button"
+            style={{
+              width: "250px",
+              height: "101px"
+            }}
+            onClick={this.onClick}
+            value="SALIR"
+          />
         </div>
       );
     }
@@ -319,6 +264,7 @@ class Identificacion extends Component {
 
 Identificacion.propTypes = {
   buscarBenediciario: PropTypes.func.isRequired,
+  reiniciarCompra: PropTypes.func.isRequired,
   beneficiario: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired
 };
@@ -331,5 +277,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { buscarBenediciario }
+  { buscarBenediciario, reiniciarCompra }
 )(Identificacion);
