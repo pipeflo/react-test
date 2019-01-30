@@ -62,10 +62,10 @@
 
 #error_message_cancelados {
   position: absolute;
-  left: 10px;
+  left: 0px;
   font-size: 26px;
   color: #161e73;
-  width: 600px;
+  width: 580px;
 }
 
 #tdocumento {
