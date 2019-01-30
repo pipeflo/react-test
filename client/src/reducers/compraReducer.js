@@ -15,7 +15,8 @@ const initialState = {
   cantidad: 0,
   stringCompra: "",
   contrato: {},
-  tiraAuditora: {}
+  tiraAuditora: {},
+  idTransaccion: 0
 };
 
 export default function(state = initialState, action) {

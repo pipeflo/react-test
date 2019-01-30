@@ -19,6 +19,7 @@ router.get("/test", (req, res) => res.json({ msg: "Compras Funciona" }));
 router.post("/iniciar", (req, res) => {
   console.log("Entro a iniciar compra con ", req.body);
   const { errors, isValid } = validateCompra(req.body);
+
   //borrar archivo
   fs.unlink("./TCP-IP/IOFile/out/dataf001_OUT.eft", err => {
     if (err) {
@@ -33,7 +34,9 @@ router.post("/iniciar", (req, res) => {
   }
 
   //Consultar precio Vale
-  const stringCompra = `01,${req.body.valorTotal},1,T0501,78175,0,0,11,`;
+  const stringCompra = `01,${req.body.valorTotal},1,KIOSKO_602,${
+    req.body.idTransaccion
+  },0,0,dataf001,`;
   const lrc = calculateLRC(stringCompra);
   const stringCompraFinal = stringCompra + lrc;
   //const stringCompra = `01,50,1,T0501,78175,0,0,11,59`;
@@ -53,7 +56,8 @@ router.post("/iniciar", (req, res) => {
         valorTotal: req.body.valorTotal,
         precioVale: req.body.valorVale,
         cantidad: Number(req.body.cantidad),
-        stringCompra: stringCompraFinal
+        stringCompra: stringCompraFinal,
+        idTransaccion: req.body.idTransaccion
       });
     }
   );
@@ -114,7 +118,7 @@ router.post("/registrar", (req, res) => {
           return res.status(400).json(errors);
         } else {
           console.log(result);
-          if (result.ValeElectronico) {
+          if (result) {
             if (result.ValeElectronico[0].codigoError != "0") {
               errors.mensaje = result.ValeElectronico[0].descripcionError;
               return res.status(400).json(errors);
@@ -125,7 +129,8 @@ router.post("/registrar", (req, res) => {
               return res.json(req.body);
             }
           } else {
-            errors.mensaje = "No ha sido posible registrar la compra del Vale con Colsanitas, por favor comuniquese con el personal Administrativo.";
+            errors.mensaje =
+              "No ha sido posible registrar la compra del Vale con Colsanitas, por favor comuniquese con el personal Administrativo.";
             return res.status(400).json(errors);
           }
         }

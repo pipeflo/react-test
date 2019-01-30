@@ -62,6 +62,7 @@ class Cantidad extends Component {
     } else if (e.target.value === "ACEPTAR") {
       console.log("Iniciar compra para ", this.state.compra.cantidad, "vales");
       const compraData = {
+        idTransaccion: Math.floor(Math.random() * 1000000 + 1),
         cantidad: this.state.compra.cantidad,
         valorVale: this.state.compra.valorVale,
         valorTotal:
