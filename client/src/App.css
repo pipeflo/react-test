@@ -418,7 +418,7 @@
   background: url("./img/buttons/salir.png");
   position: absolute;
   top: 300px;
-  left: 101px;
+  left: 51px;
   border: 1px;
 }
 
@@ -426,7 +426,7 @@
   background: url("./img/buttons/salir_h.png");
   position: absolute;
   top: 300px;
-  left: 101px;
+  left: 51px;
   border: 1px;
 }
 
@@ -434,7 +434,7 @@
   background: url("./img/buttons/reintentar.png");
   position: absolute;
   top: 300px;
-  left: 384px;
+  left: 334px;
   border: 1px;
 }
 
@@ -442,7 +442,7 @@
   background: url("./img/buttons/reintentar_h.png");
   position: absolute;
   top: 300px;
-  left: 384px;
+  left: 334px;
   border: 1px;
 }
 
