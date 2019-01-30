@@ -114,13 +114,19 @@ router.post("/registrar", (req, res) => {
           return res.status(400).json(errors);
         } else {
           console.log(result);
-          if (result.ValeElectronico[0].codigoError != "0") {
-            errors.mensaje = result.ValeElectronico[0].descripcionError;
-            return res.status(400).json(errors);
+          if (result.ValeElectronico) {
+            if (result.ValeElectronico[0].codigoError != "0") {
+              errors.mensaje = result.ValeElectronico[0].descripcionError;
+              return res.status(400).json(errors);
+            } else {
+              req.body.compra.transaccion =
+                result.ValeElectronico[0].transaccion;
+              req.body.compra.valeElectronico = result.ValeElectronico;
+              return res.json(req.body);
+            }
           } else {
-            req.body.compra.transaccion = result.ValeElectronico[0].transaccion;
-            req.body.compra.valeElectronico = result.ValeElectronico;
-            return res.json(req.body);
+            errors.mensaje = "No ha sido posible registrar la compra del Vale con Colsanitas, por favor comuniquese con el personal Administrativo.";
+            return res.status(400).json(errors);
           }
         }
       });

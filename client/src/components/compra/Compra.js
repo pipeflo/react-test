@@ -138,7 +138,14 @@ class Compra extends Component {
   }
 
   render() {
-    const { compra, beneficiario, imprimir, pagoExitoso, show } = this.state;
+    const {
+      compra,
+      beneficiario,
+      imprimir,
+      pagoExitoso,
+      show,
+      errors
+    } = this.state;
     const textoTiraAuditora = this.props.compra.tiraAuditora.textoHtml;
     let botonFinal;
     let instrucciones;
@@ -208,6 +215,11 @@ class Compra extends Component {
           />
           <p id="mensaje_final">{this.state.data}</p>
           {botonFinal}
+          {errors.mensaje && (
+            <div id="error_message_compra" className="alert alert-info">
+              {errors.mensaje}
+            </div>
+          )}
         </div>
       );
     }

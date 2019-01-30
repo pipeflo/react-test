@@ -42,6 +42,15 @@
   width: 70%;
 }
 
+#error_message_compra {
+  position: absolute;
+  top: 600px;
+  left: 50px;
+  font-size: 26px;
+  color: #161e73;
+  width: 70%;
+}
+
 #error_message_contratos {
   position: absolute;
   top: 260px;
@@ -417,7 +426,7 @@
 #salir {
   background: url("./img/buttons/salir.png");
   position: absolute;
-  top: 300px;
+  top: 335px;
   left: 51px;
   border: 1px;
 }
@@ -425,7 +434,7 @@
 #salir:hover {
   background: url("./img/buttons/salir_h.png");
   position: absolute;
-  top: 300px;
+  top: 335px;
   left: 51px;
   border: 1px;
 }
@@ -433,7 +442,7 @@
 #reintentar {
   background: url("./img/buttons/reintentar.png");
   position: absolute;
-  top: 300px;
+  top: 335px;
   left: 334px;
   border: 1px;
 }
@@ -441,7 +450,7 @@
 #reintentar:hover {
   background: url("./img/buttons/reintentar_h.png");
   position: absolute;
-  top: 300px;
+  top: 335px;
   left: 334px;
   border: 1px;
 }

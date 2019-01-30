@@ -84,7 +84,9 @@ class Contratos extends Component {
     if (e.target.getAttribute("value") === "SALIR") {
       this.props.reiniciarCompra({});
     } else {
-      const indexContrato = e.target.getAttribute("value");
+      const indexContrato = e.target.getAttribute("value")
+        ? e.target.getAttribute("value")
+        : e.target.parentNode.getAttribute("value");
       if (
         !["55", "32", "16", "67"].includes(
           this.props.beneficiario.contratos[indexContrato].codigoPlan
@@ -133,8 +135,12 @@ class Contratos extends Component {
           >
             <br />
             <br />
-            <span style={styleContratos}>Producto: </span>{" "}
-            <span style={{ color: "blue" }}>{contrato.nombreCompania}</span>
+            <span style={styleContratos} value={i}>
+              Producto:{" "}
+            </span>{" "}
+            <span style={{ color: "blue" }} value={i}>
+              {contrato.nombreCompania}
+            </span>
             <br />
             <span style={styleContratos}>Plan:</span> {contrato.nombrePlan}
             <br />
