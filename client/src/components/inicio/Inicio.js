@@ -80,7 +80,7 @@ class Inicio extends Component {
         <div className="principal">
           <img
             id="fondo_principal"
-            src="../../img/colsanitas_soft-pag_1.jpg"
+            src="../../img/colsanitas_soft-pag_2.jpg"
             width="748"
             height="1366"
             alt=""
