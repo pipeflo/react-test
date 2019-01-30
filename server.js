@@ -81,12 +81,12 @@ wss.on("connection", ws => {
                 break;
               case "05":
                 //Error comunicación datafono o tiempo de espera
-                ws.send(
+                /*ws.send(
                   JSON.stringify({
                     message: `La compra NO se ha realizado. Ha tardado mucho tiempo en iniciar la compra en el datafono.`,
                     pagoExitoso: false
                   })
-                );
+                );*/
                 break;
               default:
                 //Comportamiento no esperado
