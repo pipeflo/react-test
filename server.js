@@ -72,12 +72,13 @@ wss.on("connection", ws => {
                 break;
               case "03":
                 //Error comunicación datafono o tiempo de espera
-                ws.send(
+                /*ws.send(
                   JSON.stringify({
                     message: `La compra NO se ha realizado. No se obtuvo una respuesta del Datafono, por favor intente de nuevo.`,
                     pagoExitoso: false
                   })
-                );
+                );*/
+                console.log("Respuesta 03 Ignorada");
                 break;
               case "05":
                 //Error comunicación datafono o tiempo de espera
