@@ -27,6 +27,7 @@ class Compra extends Component {
       },
       errors: {},
       timeOut: null,
+      registro: false,
       imprimio: false
     };
     this.handleChange = this.handleChange.bind(this);
@@ -92,9 +93,9 @@ class Compra extends Component {
         this.setState({ compra });
         if (!this.props.compra.transaccion) {
           console.log("props transaccion no existe");
-          if (!this.state.imprimio) {
+          if (!this.state.registro) {
             console.log("Imprimio 1:", this.imprimio);
-
+            this.setState({ registro: true });
             console.log("Imprimio 2:", this.imprimio);
             this.props.consultarTiraAuditoria(nextProps.compra);
             console.log("Imprimio 3:", this.imprimio);
