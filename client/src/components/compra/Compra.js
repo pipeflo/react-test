@@ -26,7 +26,8 @@ class Compra extends Component {
         tiraAuditora: {}
       },
       errors: {},
-      timeOut: null
+      timeOut: null,
+      imprimio: false
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleShow = this.handleShow.bind(this);
@@ -57,6 +58,7 @@ class Compra extends Component {
     ) {
       this.PrintElem("tira");
       const props = this.props;
+      this.setState({ imprimio: true });
       this.timeOut = setTimeout(function() {
         props.reiniciarCompra({});
       }, 10000);
@@ -85,7 +87,9 @@ class Compra extends Component {
         let compra = Object.assign({}, this.props.compra); //creating copy of object
         this.setState({ compra });
         if (!this.props.compra.transaccion) {
-          this.props.consultarTiraAuditoria(nextProps.compra);
+          if (!this.imprimio) {
+            this.props.consultarTiraAuditoria(nextProps.compra);
+          }
         }
       }
     }
