@@ -83,12 +83,19 @@ class Compra extends Component {
     }
 
     if (this.props.compra.transaccion !== nextProps.compra.transaccion) {
+      console.log("cambio transaccion");
       if (nextProps.compra.transaccion) {
+        console.log("existe next props transaccion");
         let compra = Object.assign({}, this.props.compra); //creating copy of object
         this.setState({ compra });
         if (!this.props.compra.transaccion) {
+          console.log("props transaccion no existe");
           if (!this.imprimio) {
+            console.log("Imprimio 1:", this.imprimio);
+            this.setState({ imprimio: true });
+            console.log("Imprimio 2:", this.imprimio);
             this.props.consultarTiraAuditoria(nextProps.compra);
+            console.log("Imprimio 3:", this.imprimio);
           }
         }
       }
