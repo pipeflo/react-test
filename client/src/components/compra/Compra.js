@@ -94,7 +94,7 @@ class Compra extends Component {
           console.log("props transaccion no existe");
           if (!this.state.imprimio) {
             console.log("Imprimio 1:", this.imprimio);
-            this.setState({ imprimio: true });
+
             console.log("Imprimio 2:", this.imprimio);
             this.props.consultarTiraAuditoria(nextProps.compra);
             console.log("Imprimio 3:", this.imprimio);
