@@ -26,25 +26,34 @@ export const agregarContrato = (contratoData, beneficiario) => dispatch => {
             payload: compra
           });
         })
-        .catch(err =>
+        .catch(err => {
+          dispatch(setContratoLoading(false));
           dispatch({
             type: GET_ERRORS,
             payload: err.response.data
-          })
-        );
+          });
+        });
     })
-    .catch(err =>
+    .catch(err => {
       dispatch({
         type: GET_ERRORS,
         payload: err.response.data
-      })
-    );
+      });
+      dispatch(setContratoLoading(false));
+    });
 };
 
 //cambiar estado de cargando beneficiario
 export const setContratoLoading = cargando => {
   return {
     type: CONTRATO_LOADING,
-    payload: true
+    payload: cargando
   };
+};
+
+export const setErrors = errors => dispatch => {
+  dispatch({
+    type: GET_ERRORS,
+    payload: errors
+  });
 };

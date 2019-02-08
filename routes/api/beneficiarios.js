@@ -133,7 +133,7 @@ router.post("/consulta", (req, res) => {
                 } else {
                   //Estado de usuario NO HABILITADO
                   beneficiario.contratos[0].error =
-                    "Su  contrato  se  encuentra pendiente de pagos acérquese a Asesoría integral o comuníquese a la LíneaNro. 4871920";
+                    "Su  contrato  se  encuentra pendiente de pagos acérquese a Asesoría integral o comuníquese a la Línea Nro. 4871920";
                 }
               } else if (beneficiario.contratos[0].estadoContrato === "1") {
                 //contrato cancelado, revisar si está o no HABILITADO
@@ -213,7 +213,11 @@ router.post("/consulta", (req, res) => {
             }
           }
         });
-      } catch (e) {}
+      } catch (e) {
+        errors.mensaje =
+          "No hay conexión con los servicios de Colsanitas, por favor intente de nuevo en unos minutos.";
+        return res.status(400).json(errors);
+      }
     })();
   }
 });
@@ -299,7 +303,11 @@ router.post("/ciudad", (req, res) => {
             return res.status(400).json(errors);
           }
         });
-      } catch (e) {}
+      } catch (e) {
+        errors.mensaje =
+          "No hay conexión con los servicios de Colsanitas, por favor intente de nuevo en unos minutos.";
+        return res.status(400).json(errors);
+      }
     })();
   }
 });
@@ -376,29 +384,46 @@ router.post("/precio", (req, res) => {
 
         xmlreader.read(body, function(err, respuesta) {
           if (err) return console.log("Error reading XML:", err);
+          console.log(
+            "precio vale:",
+            respuesta["soapenv:Envelope"]["soapenv:Body"][
+              "ns4:ConsultaPrecioSal"
+            ].precioSal.precio.precio["ns1:valorTotal"].text()
+          );
+          if (
+            respuesta["soapenv:Envelope"]["soapenv:Body"][
+              "ns4:ConsultaPrecioSal"
+            ].precioSal.precio.precio["ns1:valorTotal"].text() !== "0"
+          ) {
+            let precio = {};
 
-          let precio = {};
-
-          precio.valorTotal = respuesta["soapenv:Envelope"]["soapenv:Body"][
-            "ns4:ConsultaPrecioSal"
-          ].precioSal.precio.precio["ns1:valorTotal"].text();
-          precio.valorIVA = respuesta["soapenv:Envelope"]["soapenv:Body"][
-            "ns4:ConsultaPrecioSal"
-          ].precioSal.precio.precio["ns1:valorIVA"].text();
-          precio.valorBase = respuesta["soapenv:Envelope"]["soapenv:Body"][
-            "ns4:ConsultaPrecioSal"
-          ].precioSal.precio["ns2:valorBase"].text();
-          precio.descuento = respuesta["soapenv:Envelope"]["soapenv:Body"][
-            "ns4:ConsultaPrecioSal"
-          ].precioSal.precio["ns2:descuento"].text();
-          precio.requierePin = respuesta["soapenv:Envelope"]["soapenv:Body"][
-            "ns4:ConsultaPrecioSal"
-          ].precioSal.precio["ns2:requierePin"].text();
-          console.log(precio);
-          res.json(precio);
+            precio.valorTotal = respuesta["soapenv:Envelope"]["soapenv:Body"][
+              "ns4:ConsultaPrecioSal"
+            ].precioSal.precio.precio["ns1:valorTotal"].text();
+            precio.valorIVA = respuesta["soapenv:Envelope"]["soapenv:Body"][
+              "ns4:ConsultaPrecioSal"
+            ].precioSal.precio.precio["ns1:valorIVA"].text();
+            precio.valorBase = respuesta["soapenv:Envelope"]["soapenv:Body"][
+              "ns4:ConsultaPrecioSal"
+            ].precioSal.precio["ns2:valorBase"].text();
+            precio.descuento = respuesta["soapenv:Envelope"]["soapenv:Body"][
+              "ns4:ConsultaPrecioSal"
+            ].precioSal.precio["ns2:descuento"].text();
+            precio.requierePin = respuesta["soapenv:Envelope"]["soapenv:Body"][
+              "ns4:ConsultaPrecioSal"
+            ].precioSal.precio["ns2:requierePin"].text();
+            console.log(precio);
+            res.json(precio);
+          } else {
+            errors.mensaje =
+              "El contrato seleccionado no requiere de la compra de vales.";
+            return res.status(400).json(errors);
+          }
         });
       } catch (e) {
-        console.log("Error:", e);
+        errors.mensaje =
+          "No hay conexión con los servicios de Colsanitas, por favor intente de nuevo en unos minutos.";
+        return res.status(400).json(errors);
       }
     })();
   }
@@ -426,30 +451,35 @@ const extraerContratos = contratosXml => {
       )
     };
 
-    if (contrato.estadoContrato === "4") {
-      //contrato Liquidado, verificar si el usuario está o no HABILITADO
-      if (contrato.estadoUsuario === "HABILITADO") {
-        //estado contrato y estado usuario correctos
-        contrato.error = false;
-      } else {
-        //Estado de usuario NO HABILITADO
-        contrato.error =
-          "Su  contrato  se  encuentra pendiente de pagos acérquese a Asesoría integral o comuníquese a la LíneaNro. 4871920";
-      }
-    } else if (contrato.estadoContrato === "1") {
-      //contrato cancelado, revisar si está o no HABILITADO
-      if (contrato.estadoUsuario === "HABILITADO") {
-        if (contrato.fechaConsultaPrestacionServicio > Date.now()) {
-          //contrato cancelado pero aun vigente
+    if (!["55", "32", "16", "67"].includes(contrato.codigoPlan)) {
+      if (contrato.estadoContrato === "4") {
+        //contrato Liquidado, verificar si el usuario está o no HABILITADO
+        if (contrato.estadoUsuario === "HABILITADO") {
+          //estado contrato y estado usuario correctos
           contrato.error = false;
+        } else {
+          //Estado de usuario NO HABILITADO
+          contrato.error =
+            "Su  contrato  se  encuentra pendiente de pagos acérquese a Asesoría integral o comuníquese a la Línea Nro. 4871920";
+        }
+      } else if (contrato.estadoContrato === "1") {
+        //contrato cancelado, revisar si está o No HABILITADO
+        if (contrato.estadoUsuario === "HABILITADO") {
+          if (contrato.fechaConsultaPrestacionServicio >= Date.now()) {
+            //contrato cancelado pero aun vigente
+            contrato.error = false;
+          } else {
+            contrato.error =
+              "Contrato cancelado, acérquese a Asesoría integral o comuníquese a la Línea Nro. 4871920";
+          }
         } else {
           contrato.error =
             "Contrato cancelado, acérquese a Asesoría integral o comuníquese a la Línea Nro. 4871920";
         }
-      } else {
-        contrato.error =
-          "Contrato cancelado, acérquese a Asesoría integral o comuníquese a la Línea Nro. 4871920";
       }
+    } else {
+      contrato.error =
+        "El contrato seleccionado no requiere de la compra de Vales.";
     }
     contratos.push(contrato);
   });

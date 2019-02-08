@@ -20,9 +20,16 @@ class Identificacion extends Component {
       numeroIdentificacion: "",
       contratos: [],
       cargando: false,
-      errors: {}
+      errors: {},
+      timeOut: null
     };
-    this.handleChange = this.handleChange.bind(this);
+  }
+
+  isEmpty(obj) {
+    for (var key in obj) {
+      if (obj.hasOwnProperty(key)) return false;
+    }
+    return true;
   }
 
   componentDidMount() {
@@ -41,6 +48,15 @@ class Identificacion extends Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.errors) {
       this.setState({ errors: nextProps.errors });
+      if (nextProps.errors !== this.props.errors) {
+        const props = this.props;
+        if (!this.isEmpty(nextProps.errors)) {
+          let tiempo = setTimeout(function() {
+            props.reiniciarCompra({});
+          }, 10000);
+          this.timeOut = tiempo;
+        }
+      }
     }
 
     if (nextProps.beneficiario.contratos.length > 0) {
@@ -60,20 +76,9 @@ class Identificacion extends Component {
     this.setState({ [e.target.name]: e.target.value });
   };
 
-  handleChange(event) {
-    this.setState({
-      tipoIdentificacion: event.target.value
-    });
-    if (event.target.value === "CC") {
-      console.log("TIpo identificacion CC");
-      this.setState({ codTipoIdentificacion: "01" });
-    } else {
-      this.setState({ codTipoIdentificacion: "02" });
-    }
-  }
-
   onClick = e => {
     e.preventDefault();
+    clearTimeout(this.timeOut);
     if (e.target.value === "BORRAR") {
       this.setState({ numeroIdentificacion: "" });
     } else if (e.target.value === "ACEPTAR") {

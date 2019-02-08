@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import classnames from "classnames";
 import { Button } from "react-bootstrap";
 import { connect } from "react-redux";
 import { iniciarCompra } from "../../actions/cantidadActions";
@@ -16,8 +15,16 @@ class Cantidad extends Component {
         cantidad: 0,
         valorTotal: 0
       },
-      errors: {}
+      errors: {},
+      timeOut: null
     };
+  }
+
+  isEmpty(obj) {
+    for (var key in obj) {
+      if (obj.hasOwnProperty(key)) return false;
+    }
+    return true;
   }
 
   componentDidMount() {
@@ -31,8 +38,16 @@ class Cantidad extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.errors) {
+    if (nextProps.errors !== this.props.errors) {
       this.setState({ errors: nextProps.errors });
+
+      const props = this.props;
+      if (!this.isEmpty(nextProps.errors)) {
+        let tiempo = setTimeout(function() {
+          props.reiniciarCompra({});
+        }, 10000);
+        this.timeOut = tiempo;
+      }
     }
 
     if (nextProps.compra.inicioCompra) {
@@ -55,6 +70,7 @@ class Cantidad extends Component {
 
   onClick = e => {
     e.preventDefault();
+    clearTimeout(this.timeOut);
     if (e.target.value === "BORRAR") {
       let compra = Object.assign({}, this.state.compra); //creating copy of object
       compra.cantidad = 0; //updating value
@@ -122,9 +138,7 @@ class Cantidad extends Component {
         <img id="imarkCantidad" src="../../img/input_mark.png" alt="" />
         <input
           type="text"
-          className={classnames("form-control", {
-            "is-invalid": errors.cantidad
-          })}
+          className="form-control"
           id="usrCantidad"
           placeholder="Cantidad de Vales"
           name="cantidad"
@@ -133,7 +147,9 @@ class Cantidad extends Component {
           onKeyPress={this.onKeyPress}
         />
         {errors.cantidad && (
-          <div className="invalid-feedback">{errors.cantidad}</div>
+          <div id="error_message_cantidad" className="alert alert-info">
+            {errors.cantidad}
+          </div>
         )}
         <div id="keyboardCantidad" className="form-group">
           <Button

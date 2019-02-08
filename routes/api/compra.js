@@ -113,8 +113,8 @@ router.post("/registrar", (req, res) => {
     soap.createClient(url, function(err, client) {
       client.registrar(input, function(err, result) {
         if (err) {
-          errors.mensaje = err;
-          console.log("Error llamando Servicio Registrar Compra:", err);
+          errors.mensaje =
+            "No ha sido posible registrar la compra del Vale con Colsanitas, por favor comuníquese a la línea 4871920 o diríjase al jefe de servicios para validar su(s) vale(s).";
           return res.status(400).json(errors);
         } else {
           console.log(result);
@@ -130,7 +130,7 @@ router.post("/registrar", (req, res) => {
             }
           } else {
             errors.mensaje =
-              "No ha sido posible registrar la compra del Vale con Colsanitas, por favor comuniquese con el personal Administrativo.";
+              "No ha sido posible registrar la compra del Vale con Colsanitas, por favor comuníquese a la línea 4871920 o diríjase al jefe de servicios para validar su(s) vale(s).";
             return res.status(400).json(errors);
           }
         }
@@ -167,11 +167,15 @@ router.post("/tiraAuditoria", (req, res) => {
 
     soap.createClient(url, function(err, client) {
       if (err) {
-        console.log("Error creando cliente");
+        errors.mensaje =
+          "No ha sido posible generar el Documento Equivalente, por favor comuníquese a la línea 4871920 o diríjase al jefe de servicios para validar su(s) vale(s).";
+        console.log("Error genrando cliente SOAP Traer Tira:", err);
+        return res.status(400).json(errors);
       } else {
         client.ConsultarTiraAuditora(input, function(err, result) {
           if (err) {
-            errors.mensaje = err;
+            errors.mensaje =
+              "No ha sido posible generar el Documento Equivalente, por favor comuníquese a la línea 4871920 o diríjase al jefe de servicios para validar su(s) vale(s).";
             console.log("Error llamando Servicio TraerTira:", err);
             return res.status(400).json(errors);
           } else {

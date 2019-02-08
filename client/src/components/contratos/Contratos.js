@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import { connect } from "react-redux";
-import { agregarContrato } from "../../actions/contratosActions";
+import { agregarContrato, setErrors } from "../../actions/contratosActions";
 import { reiniciarCompra } from "../../actions/identificacionActions";
 import Spinner from "../common/Spinner";
 
@@ -18,9 +18,17 @@ class Contratos extends Component {
       beneficiario: {},
       compra: {},
       errors: {},
-      contratoSinOpcionDeCompra: false
+      contratoSinOpcionDeCompra: false,
+      timeOut: null
     };
     this.onClick = this.onClick.bind(this);
+  }
+
+  isEmpty(obj) {
+    for (var key in obj) {
+      if (obj.hasOwnProperty(key)) return false;
+    }
+    return true;
   }
 
   componentDidMount() {
@@ -35,6 +43,11 @@ class Contratos extends Component {
             this.props.beneficiario.contratos[0],
             this.props.beneficiario
           );
+        } else {
+          const errors = {
+            mensaje: this.props.beneficiario.contratos[0].error
+          };
+          this.props.setErrors(errors);
         }
       }
     }
@@ -49,6 +62,18 @@ class Contratos extends Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.errors) {
       this.setState({ errors: nextProps.errors });
+      if (nextProps.errors !== this.props.errors) {
+        const props = this.props;
+        if (!this.isEmpty(nextProps.errors)) {
+          console.log("Entro con error");
+          let tiempo = setTimeout(function() {
+            props.reiniciarCompra({});
+          }, 10000);
+          console.log(tiempo);
+          this.timeOut = tiempo;
+          console.log(this.timeOut);
+        }
+      }
     }
 
     if (nextProps.compra.inicioCompra) {
@@ -81,148 +106,109 @@ class Contratos extends Component {
 
   onClick(e) {
     e.preventDefault();
+    clearTimeout(this.timeOut);
     if (e.target.getAttribute("value") === "SALIR") {
       this.props.reiniciarCompra({});
     } else {
       const indexContrato = e.target.getAttribute("value")
         ? e.target.getAttribute("value")
         : e.target.parentNode.getAttribute("value");
-      if (
-        !["55", "32", "16", "67"].includes(
-          this.props.beneficiario.contratos[indexContrato].codigoPlan
-        )
-      ) {
+      if (!this.props.beneficiario.contratos[indexContrato].error) {
         this.props.agregarContrato(
           this.props.beneficiario.contratos[indexContrato],
           this.props.beneficiario
         );
       } else {
-        this.setState({ contratoSinOpcionDeCompra: true });
+        const errors = {
+          mensaje: this.props.beneficiario.contratos[indexContrato].error
+        };
+        this.props.setErrors(errors);
       }
     }
   }
 
   render() {
     const { cargando } = this.props.compra;
-    const nombre = this.state.nombre;
-    const contratoSinCompra = this.state.contratoSinOpcionDeCompra;
+    const { nombre, errors } = this.state;
     const funciones = { onClick: this.onClick };
-    let activos = 0;
     const styleContratos = { fontWeight: "bold" };
     let htmlContratos = this.props.beneficiario.contratos.map(function(
       contrato,
       i
     ) {
-      if (!contrato.error) {
-        activos++;
-        return (
-          <Link
-            key={contrato.numeroContrato}
-            style={{
-              width: "250px",
-              height: "250px",
-              marginBottom: "30px",
-              marginRight: "30px",
-              fontSize: "18px",
-              textAlign: "left",
-              alignContent: "center",
-              color: "black"
-            }}
-            value={i}
-            className="btn btn-primary boton_contrato"
-            onClick={funciones.onClick}
-            to="#"
-          >
-            <br />
-            <br />
-            <span style={styleContratos} value={i}>
-              Producto:{" "}
-            </span>{" "}
-            <span style={{ color: "blue" }} value={i}>
-              {contrato.nombreCompania}
-            </span>
-            <br />
-            <span style={styleContratos}>Plan:</span> {contrato.nombrePlan}
-            <br />
-            <span style={styleContratos}>No. Contrato:</span>{" "}
-            {contrato.numeroContrato}
-            <br />
-            <span style={styleContratos}>Familia:</span>{" "}
-            {contrato.numeroFamilia}
-            <br />
-            <span style={styleContratos}>Estado:</span> {contrato.estadoUsuario}
-          </Link>
-        );
-      } else {
-        return <div />;
-      }
+      return (
+        <Link
+          key={contrato.numeroContrato}
+          style={{
+            width: "250px",
+            height: "250px",
+            marginBottom: "30px",
+            marginRight: "30px",
+            fontSize: "18px",
+            textAlign: "left",
+            alignContent: "center",
+            color: "black"
+          }}
+          value={i}
+          className="btn btn-primary boton_contrato"
+          onClick={funciones.onClick}
+          to="#"
+        >
+          <br />
+          <br />
+          <span style={styleContratos} value={i}>
+            Producto:{" "}
+          </span>{" "}
+          <span style={{ color: "blue" }} value={i}>
+            {contrato.nombreCompania}
+          </span>
+          <br />
+          <span style={styleContratos}>Plan:</span> {contrato.nombrePlan}
+          <br />
+          <span style={styleContratos}>No. Contrato:</span>{" "}
+          {contrato.numeroContrato}
+          <br />
+          <span style={styleContratos}>Familia:</span> {contrato.numeroFamilia}
+          <br />
+          <span style={styleContratos}>Estado:</span> {contrato.estadoUsuario}
+        </Link>
+      );
     });
 
     let contenido;
 
-    if (activos > 0) {
-      contenido = (
-        <div>
-          <img
-            id="fondo_principal"
-            src="../../img/colsanitas_soft-pag_2.jpg"
-            width="748"
-            height="1366"
-            alt=""
-          />
-          <p id="nombre_cliente">{nombre}</p>
-          <p id="contrato">Seleccione el contrato al que aplique la compra</p>
-          {contratoSinCompra ? (
-            <div id="error_message_contratos" className="alert alert-info">
-              El contrato seleccionado no requiere de la compra de Vales.
-            </div>
-          ) : (
-            ""
-          )}
-          <div className="form-group" id="contract_1">
-            {htmlContratos}
+    contenido = (
+      <div>
+        <img
+          id="fondo_principal"
+          src="../../img/colsanitas_soft-pag_2.jpg"
+          width="748"
+          height="1366"
+          alt=""
+        />
+        <p id="nombre_cliente">{nombre}</p>
+        <p id="contrato">Seleccione el contrato al que aplique la compra</p>
+        {errors.mensaje ? (
+          <div id="error_message_contratos" className="alert alert-info">
+            {errors.mensaje}
           </div>
-          <Button
-            id="home_button"
-            style={{
-              width: "250px",
-              height: "101px"
-            }}
-            onClick={this.onClick}
-            value="SALIR"
-          />
+        ) : (
+          ""
+        )}
+        <div className="form-group" id="contract_1">
+          {htmlContratos}
         </div>
-      );
-    } else {
-      contenido = (
-        <div className="principal">
-          <img
-            id="fondo_principal"
-            src="../../img/colsanitas_soft-pag_2.jpg"
-            width="748"
-            height="1366"
-            alt=""
-          />
-          <p id="nombre_cliente">{nombre}</p>
-          <p id="contrato">Seleccione el contrato al que aplique la compra</p>
-          <div className="form-group" id="contract_1">
-            <div id="error_message_cancelados" className="alert alert-info">
-              Contrato cancelado acérquese a Asesoría integral o comuníquese a
-              la Línea Nro. 4871920
-            </div>
-          </div>
-          <Button
-            id="home_button"
-            style={{
-              width: "250px",
-              height: "101px"
-            }}
-            onClick={this.onClick}
-            value="SALIR"
-          />
-        </div>
-      );
-    }
+        <Button
+          id="home_button"
+          style={{
+            width: "250px",
+            height: "101px"
+          }}
+          onClick={this.onClick}
+          value="SALIR"
+        />
+      </div>
+    );
 
     if (cargando) {
       return (
@@ -246,6 +232,7 @@ class Contratos extends Component {
 Contratos.propTypes = {
   agregarContrato: PropTypes.func.isRequired,
   reiniciarCompra: PropTypes.func.isRequired,
+  setErrors: PropTypes.func.isRequired,
   beneficiario: PropTypes.object.isRequired,
   compra: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired
@@ -259,5 +246,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { agregarContrato, reiniciarCompra }
+  { agregarContrato, reiniciarCompra, setErrors }
 )(Contratos);

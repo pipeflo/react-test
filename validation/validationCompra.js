@@ -10,12 +10,8 @@ module.exports = function validateCompra(data) {
     errors.cantidad = "La cantidad de Vales debe ser mayor a 0";
   }
 
-  if (data.cantidad > 20) {
-    errors.cantidad = "No puede comprar más de 20 vales";
-  }
-
-  if (data.cantidad < 1) {
-    errors.cantidad = "La cantidad de Vales debe ser mayor a 0";
+  if (data.cantidad > 25 || data.cantidad < 1) {
+    errors.cantidad = "Debe digitar una cantidad válida entre 1 y 25 vales.";
   }
 
   return {

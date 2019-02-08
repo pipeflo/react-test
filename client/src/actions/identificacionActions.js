@@ -38,8 +38,9 @@ export const setBeneficiario = data => {
 
 //re-iniciar app
 export const reiniciarCompra = () => dispatch => {
-  dispatch(borrarBeneficiarioActual());
   dispatch(borrarCompraActual());
+  dispatch(borrarBeneficiarioActual());
+  dispatch(clearErrors());
 };
 
 //cambiar estado de cargando beneficiario

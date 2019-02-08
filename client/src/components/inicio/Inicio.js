@@ -11,7 +11,10 @@ import Spinner from "../common/Spinner";
 class Inicio extends Component {
   constructor() {
     super();
-    this.state = {};
+    this.state = {
+      errors: {},
+      timeOut: null
+    };
     this.onClick = this.onClick.bind(this);
   }
 
@@ -24,11 +27,23 @@ class Inicio extends Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.errors) {
       this.setState({ errors: nextProps.errors });
+      const props = this.props;
+      if (nextProps.errors.mensaje) {
+        this.setState({
+          timeOut: setTimeout(function() {
+            props.history.push("/");
+          }, 10000)
+        });
+      }
     }
 
     if (nextProps.beneficiario.tipoIdentificacion) {
       this.props.history.push("/identificacion");
     }
+  }
+
+  handleTimeOut() {
+    this.props.history.push("/");
   }
 
   onClick(e) {
@@ -44,31 +59,42 @@ class Inicio extends Component {
   render() {
     const { tipos, cargando } = this.props.tiposIdentificacion;
     const funciones = { onClick: this.onClick };
+    const { errors } = this.state;
     let contenido;
-    let hmltTiposIdentificacion = tipos.map(function(tipo, i) {
-      return (
-        <Link
-          key={tipo.codTipoIdentificacion}
-          style={{
-            width: "250px",
-            height: "180px",
-            marginBottom: "30px",
-            marginRight: "30px",
-            fontSize: "24px",
-            alignContent: "center",
-            whiteSpace: "pre-wrap",
-            wordWrap: "break-word",
-            paddingTop: "8%"
-          }}
-          value={i}
-          className="btn btn-primary"
-          onClick={funciones.onClick}
-          to="#"
-        >
-          {tipo.descripcion}
-        </Link>
+    let htmlTiposIdentificacion;
+    if (errors.mensaje) {
+      htmlTiposIdentificacion = (
+        <div id="error_message_inicio" className="alert alert-info">
+          {errors.mensaje}
+        </div>
       );
-    });
+    } else {
+      htmlTiposIdentificacion = tipos.map(function(tipo, i) {
+        return (
+          <Link
+            key={tipo.codTipoIdentificacion}
+            style={{
+              width: "250px",
+              height: "180px",
+              marginBottom: "30px",
+              marginRight: "30px",
+              fontSize: "24px",
+              alignContent: "center",
+              whiteSpace: "pre-wrap",
+              wordWrap: "break-word",
+              paddingTop: "8%"
+            }}
+            value={i}
+            className="btn btn-primary"
+            onClick={funciones.onClick}
+            to="#"
+          >
+            {tipo.descripcion}
+          </Link>
+        );
+      });
+    }
+
     if (cargando) {
       contenido = (
         <div className="principal">
@@ -89,7 +115,7 @@ class Inicio extends Component {
             Por favor seleccione su Tipo de Identificación para Iniciar
           </p>
           <div className="form-group" id="tipos_identificacion">
-            {hmltTiposIdentificacion}
+            {htmlTiposIdentificacion}
           </div>
         </div>
       );

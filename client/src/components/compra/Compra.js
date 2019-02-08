@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { Button } from "react-bootstrap";
 import PropTypes from "prop-types";
 import Websocket from "react-websocket";
-import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { reiniciarCompra } from "../../actions/identificacionActions";
 import {
@@ -26,16 +25,24 @@ class Compra extends Component {
         numeroAprobacion: "",
         tiraAuditora: {}
       },
-      errors: {}
+      errors: {},
+      timeOut: null
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleShow = this.handleShow.bind(this);
     this.handleClose = this.handleClose.bind(this);
   }
 
+  isEmpty(obj) {
+    for (var key in obj) {
+      if (obj.hasOwnProperty(key)) return false;
+    }
+    return true;
+  }
+
   componentDidMount() {
     if (!this.props.compra.inicioCompra) {
-      this.props.history.push("/identificacion");
+      this.props.history.push("/");
     }
     this.setState({
       beneficiario: this.props.beneficiario,
@@ -49,24 +56,36 @@ class Compra extends Component {
       this.props.compra.tiraAuditora.textoHtml
     ) {
       this.PrintElem("tira");
-      this.props.reiniciarCompra();
+      const props = this.props;
+      this.timeOut = setTimeout(function() {
+        props.reiniciarCompra({});
+      }, 10000);
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.errors) {
+    if (nextProps.errors !== this.props.errors) {
       this.setState({ errors: nextProps.errors });
+
+      const props = this.props;
+      if (!this.isEmpty(nextProps.errors)) {
+        let tiempo = setTimeout(function() {
+          props.reiniciarCompra({});
+        }, 10000);
+        this.timeOut = tiempo;
+      }
     }
 
     if (!nextProps.compra.inicioCompra) {
       this.props.history.push("/");
     }
 
-    if (nextProps.compra.transaccion) {
-      console.log(this.props.compra.transaccion);
-      this.setState({ imprimir: true });
-      let compra = Object.assign({}, this.props.compra); //creating copy of object
-      this.setState({ compra });
+    if (this.props.compra.transaccion !== nextProps.compra.transaccion) {
+      if (nextProps.compra.transaccion) {
+        let compra = Object.assign({}, this.props.compra); //creating copy of object
+        this.setState({ compra });
+        this.props.consultarTiraAuditoria(nextProps.compra);
+      }
     }
   }
 
@@ -93,7 +112,6 @@ class Compra extends Component {
     //let result = JSON.parse(data);
     //this.setState({ count: this.state.count + result.movement });
     const respuesta = JSON.parse(data);
-    console.log("Respuesta:", respuesta);
     if (respuesta.reintentar) {
       this.props.iniciarCompra(this.props.compra);
     } else {
@@ -106,13 +124,18 @@ class Compra extends Component {
         let compra = Object.assign({}, this.state.compra); //creating copy of object
         compra.numeroAprobacion = respuesta.numeroAprobacion;
         this.props.registrarCompra(this.state.beneficiario, compra);
+      } else {
+        const props = this.props;
+        this.timeOut = setTimeout(function() {
+          props.reiniciarCompra({});
+        }, 10000);
       }
     }
   }
 
   handleClose(e) {
     e.preventDefault();
-
+    clearTimeout(this.timeOut);
     if (e.target.value === "REINTENTAR") {
       //this.props.history.push("/cantidad");
       this.props.iniciarCompra(this.props.compra);
@@ -121,6 +144,7 @@ class Compra extends Component {
       console.log("Vamos a imprimir");
       this.props.consultarTiraAuditoria(this.props.compra);
     } else if (e.target.value === "SALIR") {
+      console.log("di en salir");
       this.props.reiniciarCompra({});
     }
   }
@@ -131,7 +155,7 @@ class Compra extends Component {
     mywindow.document.write(
       "<html><head><title>" + document.title + "</title>"
     );
-    mywindow.document.write("</head><body >");
+    mywindow.document.write("</head><body");
     mywindow.document.write(document.getElementById("tira").innerHTML);
     mywindow.document.write("</body></html>");
 
@@ -197,6 +221,14 @@ class Compra extends Component {
         </div>
       );
     }
+    let spinner = this.props.compra.cargando ? (
+      <div id="spinner_compra">
+        <Spinner />
+        <p id="imprimiendo">&nbsp;Imprimiendo comprobante...</p>
+      </div>
+    ) : (
+      <div />
+    );
 
     if (!show) {
       instrucciones = (
@@ -222,6 +254,8 @@ class Compra extends Component {
           />
           <p id="mensaje_final">{this.state.data}</p>
           {botonFinal}
+          {spinner}
+
           {errors.mensaje && (
             <div id="error_message_compra" className="alert alert-info">
               {errors.mensaje}
@@ -231,7 +265,9 @@ class Compra extends Component {
       );
     }
 
-    if (!this.props.compra.cargando) {
+    contenido = instrucciones;
+
+    /*if (!this.props.compra.cargando) {
       contenido = instrucciones;
     } else {
       contenido = (
@@ -239,7 +275,7 @@ class Compra extends Component {
           <Spinner />
         </div>
       );
-    }
+    }*/
 
     return (
       <div className="principal">

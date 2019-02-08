@@ -98,7 +98,11 @@ router.get("/", (req, res) => {
           return res.status(400).json(errors);
         }
       });
-    } catch (e) {}
+    } catch (e) {
+      errors.mensaje =
+        "No hay conexión con los servicios de Colsanitas, por favor intente de nuevo en unos minutos.";
+      return res.status(400).json(errors);
+    }
   })();
 });
 

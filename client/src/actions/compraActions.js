@@ -3,6 +3,10 @@ import { SET_DATOS_COMPRA, TIRA_AUDITORA_LOADING, GET_ERRORS } from "./types";
 
 //Registrar Compra
 export const registrarCompra = (beneficiario, compra) => dispatch => {
+  dispatch({
+    type: TIRA_AUDITORA_LOADING,
+    payload: true
+  });
   const infoCompra = {
     beneficiario: beneficiario,
     compra: compra
@@ -14,20 +18,24 @@ export const registrarCompra = (beneficiario, compra) => dispatch => {
       console.log("Datos despues de registrar compra:", res.data.compra);
       dispatch(setCompra(res.data.compra));
     })
-    .catch(err =>
+    .catch(err => {
       dispatch({
         type: GET_ERRORS,
         payload: err.response.data
-      })
-    );
+      });
+
+      dispatch({
+        type: TIRA_AUDITORA_LOADING,
+        payload: false
+      });
+    });
 };
 
 //Traer Documento Equivalente
 export const consultarTiraAuditoria = compra => dispatch => {
-  console.log("Traer tira con:", compra);
   dispatch({
     type: TIRA_AUDITORA_LOADING,
-    action: true
+    payload: true
   });
   //Llamar API para registrar compra con Colsanitas
   axios
@@ -37,12 +45,16 @@ export const consultarTiraAuditoria = compra => dispatch => {
       console.log("Llamado exitoso de traer tira:", res.data);
       dispatch(setCompra(res.data));
     })
-    .catch(err =>
+    .catch(err => {
       dispatch({
         type: GET_ERRORS,
         payload: err.response.data
-      })
-    );
+      });
+      dispatch({
+        type: TIRA_AUDITORA_LOADING,
+        payload: false
+      });
+    });
 };
 
 //Set datos compra

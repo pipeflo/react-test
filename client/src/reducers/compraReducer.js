@@ -16,7 +16,8 @@ const initialState = {
   stringCompra: "",
   contrato: {},
   tiraAuditora: {},
-  idTransaccion: 0
+  idTransaccion: 0,
+  transaccion: ""
 };
 
 export default function(state = initialState, action) {
@@ -51,7 +52,7 @@ export default function(state = initialState, action) {
     case TIRA_AUDITORA_LOADING:
       return {
         ...state,
-        cargando: true
+        cargando: action.payload
       };
     default:
       return state;
