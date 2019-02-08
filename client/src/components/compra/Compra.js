@@ -84,7 +84,9 @@ class Compra extends Component {
       if (nextProps.compra.transaccion) {
         let compra = Object.assign({}, this.props.compra); //creating copy of object
         this.setState({ compra });
-        this.props.consultarTiraAuditoria(nextProps.compra);
+        if (!this.props.compra.transaccion) {
+          this.props.consultarTiraAuditoria(nextProps.compra);
+        }
       }
     }
   }
