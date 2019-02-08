@@ -56,12 +56,14 @@ class Compra extends Component {
       !this.props.compra.cargando &&
       this.props.compra.tiraAuditora.textoHtml
     ) {
-      this.PrintElem("tira");
-      const props = this.props;
-      this.setState({ imprimio: true });
-      this.timeOut = setTimeout(function() {
-        props.reiniciarCompra({});
-      }, 10000);
+      if (!this.state.imprimio) {
+        this.PrintElem("tira");
+        const props = this.props;
+        this.setState({ imprimio: true });
+        this.timeOut = setTimeout(function() {
+          props.reiniciarCompra({});
+        }, 10000);
+      }
     }
   }
 
