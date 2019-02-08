@@ -90,7 +90,7 @@ class Compra extends Component {
         this.setState({ compra });
         if (!this.props.compra.transaccion) {
           console.log("props transaccion no existe");
-          if (!this.imprimio) {
+          if (!this.state.imprimio) {
             console.log("Imprimio 1:", this.imprimio);
             this.setState({ imprimio: true });
             console.log("Imprimio 2:", this.imprimio);
