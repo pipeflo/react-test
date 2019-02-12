@@ -144,11 +144,13 @@ class Contratos extends Component {
             height: "250px",
             marginBottom: "30px",
             marginRight: "30px",
-            fontSize: "18px",
+            fontSize: "16px",
             textAlign: "left",
             alignContent: "center",
-            color: "black"
-          }}
+            color: "black",
+            whiteSpace: "normal",
+            overflowWrap: "break-word",
+}}
           value={i}
           className="btn btn-primary boton_contrato"
           onClick={funciones.onClick}

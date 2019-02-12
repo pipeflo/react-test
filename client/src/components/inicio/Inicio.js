@@ -74,17 +74,20 @@ class Inicio extends Component {
           <Link
             key={tipo.codTipoIdentificacion}
             style={{
-              width: "250px",
-              height: "180px",
-              marginBottom: "30px",
-              marginRight: "30px",
-              fontSize: "24px",
+              width: "200px",
+              height: "200px",
+              marginBottom: "15px",
+              marginRight: "80px",
+              fontSize: "22px",
               alignContent: "center",
-              whiteSpace: "pre-wrap",
-              wordWrap: "break-word",
-              paddingTop: "8%"
+              whiteSpace: "normal",
+              overflowWrap: "break-word",
+              paddingTop: "8%",
+              alignContent: "center",
+              
             }}
             value={i}
+            id="btn_primario"
             className="btn btn-primary"
             onClick={funciones.onClick}
             to="#"
@@ -112,7 +115,7 @@ class Inicio extends Component {
             alt=""
           />
           <p id="nombre_cliente">
-            Por favor seleccione su Tipo de Identificación para Iniciar
+            POR FAVOR SELECCIONE SU TIPO DE IDENTIFICACIÓN PARA INICIAR
           </p>
           <div className="form-group" id="tipos_identificacion">
             {htmlTiposIdentificacion}

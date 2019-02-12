@@ -35,8 +35,6 @@ class Inicio extends Component {
             height="1366"
             alt=""
           />
-          <p id="texto_1">Toque para</p>
-          <p id="texto_2">Iniciar</p>
         </div>
       </Link>
     );
