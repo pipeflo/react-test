@@ -250,29 +250,29 @@
 #info_contrato {
   position: absolute;
   font-size: 1em;
-  top: 238px;
-  left: 75px;
+  top: 200px;
+  left: 50px;
   font-size: 18px;
   color: #019fd9;
 }
 
 #hr_1 {
   position: absolute;
-  top: 260px;
+  top: 230px;
   left: 75px;
   color: white;
 }
 
 #hr_2 {
   position: absolute;
-  top: 380px;
+  top: 320px;
   left: 75px;
   color: white;
 }
 
 #vale {
   position: absolute;
-  top: 300px;
+  top: 255px;
   left: 350px;
   font-size: 24px;
   color: white;
@@ -293,7 +293,7 @@
 
 #cantidad {
   position: absolute;
-  top: 350px;
+  top: 300px;
   left: 350px;
   font-size: 24px;
   color: white;
@@ -301,7 +301,7 @@
 
 #total {
   position: absolute;
-  top: 400px;
+  top: 350px;
   left: 350px;
   font-size: 24px;
   color: white;
@@ -388,7 +388,7 @@
 
 #tipos_identificacion {
   position: absolute;
-  top: 28%;
+  top: 20%;
   left: 10%;
   border: 0px;
   border-color: white;
