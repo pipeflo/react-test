@@ -250,7 +250,7 @@ class Compra extends Component {
       instrucciones = (
         <img
           id="instrucciones"
-          src="../../img/instrucciones.jpg"
+          src="../../img/instrucciones_3.jpg"
           width="80%"
           height="950px"
           alt=""
