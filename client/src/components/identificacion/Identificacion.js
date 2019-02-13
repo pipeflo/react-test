@@ -114,6 +114,107 @@ class Identificacion extends Component {
 
     let contenido;
 
+    const keyboard = (
+      <div id="keyboard_2" className="form-group">
+        <Button id="b_1" style={numeroStyle} onClick={this.onClick} value="1" />
+        <Button id="b_2" style={numeroStyle} onClick={this.onClick} value="2" />
+        <Button id="b_3" style={numeroStyle} onClick={this.onClick} value="3" />
+        <Button id="b_4" style={numeroStyle} onClick={this.onClick} value="4" />
+        <Button id="b_5" style={numeroStyle} onClick={this.onClick} value="5" />
+        <Button id="b_6" style={numeroStyle} onClick={this.onClick} value="6" />
+        <Button id="b_7" style={numeroStyle} onClick={this.onClick} value="7" />
+        <Button id="b_8" style={numeroStyle} onClick={this.onClick} value="8" />
+        <Button id="b_9" style={numeroStyle} onClick={this.onClick} value="9" />
+        <Button id="b_0" style={numeroStyle} onClick={this.onClick} value="0" />
+
+        <br />
+        <Button id="b_Q" style={numeroStyle} onClick={this.onClick} value="Q" />
+        <Button id="b_W" style={numeroStyle} onClick={this.onClick} value="W" />
+        <Button id="b_E" style={numeroStyle} onClick={this.onClick} value="E" />
+        <Button id="b_R" style={numeroStyle} onClick={this.onClick} value="R" />
+        <Button id="b_T" style={numeroStyle} onClick={this.onClick} value="T" />
+        <Button id="b_Y" style={numeroStyle} onClick={this.onClick} value="Y" />
+        <Button id="b_U" style={numeroStyle} onClick={this.onClick} value="U" />
+        <Button id="b_I" style={numeroStyle} onClick={this.onClick} value="I" />
+        <Button id="b_O" style={numeroStyle} onClick={this.onClick} value="O" />
+        <Button id="b_P" style={numeroStyle} onClick={this.onClick} value="P" />
+        <br />
+        <Button id="b_A" style={numeroStyle} onClick={this.onClick} value="A" />
+        <Button id="b_S" style={numeroStyle} onClick={this.onClick} value="S" />
+        <Button id="b_D" style={numeroStyle} onClick={this.onClick} value="D" />
+        <Button id="b_F" style={numeroStyle} onClick={this.onClick} value="F" />
+        <Button id="b_G" style={numeroStyle} onClick={this.onClick} value="G" />
+        <Button id="b_H" style={numeroStyle} onClick={this.onClick} value="H" />
+        <Button id="b_J" style={numeroStyle} onClick={this.onClick} value="J" />
+        <Button id="b_K" style={numeroStyle} onClick={this.onClick} value="K" />
+        <Button id="b_L" style={numeroStyle} onClick={this.onClick} value="L" />
+        <br />
+        <Button id="b_Z" style={numeroStyle} onClick={this.onClick} value="Z" />
+        <Button id="b_X" style={numeroStyle} onClick={this.onClick} value="X" />
+        <Button id="b_C" style={numeroStyle} onClick={this.onClick} value="C" />
+        <Button id="b_V" style={numeroStyle} onClick={this.onClick} value="V" />
+        <Button id="b_B" style={numeroStyle} onClick={this.onClick} value="B" />
+        <Button id="b_N" style={numeroStyle} onClick={this.onClick} value="N" />
+        <Button id="b_M" style={numeroStyle} onClick={this.onClick} value="M" />
+      </div>
+    );
+
+    const numericKeyboard = (
+      <div id="keyboard" className="form-group">
+        <Button id="uno" style={numeroStyle} onClick={this.onClick} value="1" />
+        <Button id="dos" style={numeroStyle} onClick={this.onClick} value="2" />
+        <Button
+          id="tres"
+          style={numeroStyle}
+          onClick={this.onClick}
+          value="3"
+        />
+        <Button
+          id="cuatro"
+          style={numeroStyle}
+          onClick={this.onClick}
+          value="4"
+        />
+        <Button
+          id="cinco"
+          style={numeroStyle}
+          onClick={this.onClick}
+          value="5"
+        />
+        <Button
+          id="seis"
+          style={numeroStyle}
+          onClick={this.onClick}
+          value="6"
+        />
+        <Button
+          id="siete"
+          style={numeroStyle}
+          onClick={this.onClick}
+          value="7"
+        />
+        <Button
+          id="ocho"
+          style={numeroStyle}
+          onClick={this.onClick}
+          value="8"
+        />
+        <Button
+          id="nueve"
+          style={numeroStyle}
+          onClick={this.onClick}
+          value="9"
+        />
+
+        <Button
+          id="cero"
+          style={numeroStyle}
+          onClick={this.onClick}
+          value="0"
+        />
+      </div>
+    );
+
     if (cargando) {
       contenido = (
         <div className="principal">
@@ -167,228 +268,10 @@ class Identificacion extends Component {
             />
           </label>
 
-          <div id="keyboard_2" className="form-group">
-<Button
-              id="b_1"
-              style={numeroStyle}
-              onClick={this.onClick}
-              value="1"
-            />
-<Button
-              id="b_2"
-              style={numeroStyle}
-              onClick={this.onClick}
-              value="2"
-            />
-<Button
-              id="b_3"
-              style={numeroStyle}
-              onClick={this.onClick}
-              value="3"
-            />
-<Button
-              id="b_4"
-              style={numeroStyle}
-              onClick={this.onClick}
-              value="4"
-            />
-<Button
-              id="b_5"
-              style={numeroStyle}
-              onClick={this.onClick}
-              value="5"
-            />
-<Button
-              id="b_6"
-              style={numeroStyle}
-              onClick={this.onClick}
-              value="6"
-            />
-<Button
-              id="b_7"
-              style={numeroStyle}
-              onClick={this.onClick}
-              value="7"
-            />
-<Button
-              id="b_8"
-              style={numeroStyle}
-              onClick={this.onClick}
-              value="8"
-            />
-<Button
-              id="b_9"
-              style={numeroStyle}
-              onClick={this.onClick}
-              value="9"
-            />
-<Button
-              id="b_0"
-              style={numeroStyle}
-              onClick={this.onClick}
-              value="0"
-            />
-            
-<br></br>
-<Button
-              id="b_Q"
-              style={numeroStyle}
-              onClick={this.onClick}
-              value="Q"
-            />
-<Button
-              id="b_W"
-              style={numeroStyle}
-              onClick={this.onClick}
-              value="W"
-            />
-<Button
-              id="b_E"
-              style={numeroStyle}
-              onClick={this.onClick}
-              value="E"
-            />
-<Button
-              id="b_R"
-              style={numeroStyle}
-              onClick={this.onClick}
-              value="R"
-            />
-<Button
-              id="b_T"
-              style={numeroStyle}
-              onClick={this.onClick}
-              value="T"
-            />
-<Button
-              id="b_Y"
-              style={numeroStyle}
-              onClick={this.onClick}
-              value="Y"
-            />
-<Button
-              id="b_U"
-              style={numeroStyle}
-              onClick={this.onClick}
-              value="U"
-            />
-<Button
-              id="b_I"
-              style={numeroStyle}
-              onClick={this.onClick}
-              value="I"
-            />
-<Button
-              id="b_O"
-              style={numeroStyle}
-              onClick={this.onClick}
-              value="O"
-            />
-<Button
-              id="b_P"
-              style={numeroStyle}
-              onClick={this.onClick}
-              value="P"
-            />
-<br></br>
-<Button
-              id="b_A"
-              style={numeroStyle}
-              onClick={this.onClick}
-              value="A"
-            />
-<Button
-              id="b_S"
-              style={numeroStyle}
-              onClick={this.onClick}
-              value="S"
-            />
-<Button
-              id="b_D"
-              style={numeroStyle}
-              onClick={this.onClick}
-              value="D"
-            />
-<Button
-              id="b_F"
-              style={numeroStyle}
-              onClick={this.onClick}
-              value="F"
-            />
-<Button
-              id="b_G"
-              style={numeroStyle}
-              onClick={this.onClick}
-              value="G"
-            />
-<Button
-              id="b_H"
-              style={numeroStyle}
-              onClick={this.onClick}
-              value="H"
-            />
-<Button
-              id="b_J"
-              style={numeroStyle}
-              onClick={this.onClick}
-              value="J"
-            />
-<Button
-              id="b_K"
-              style={numeroStyle}
-              onClick={this.onClick}
-              value="K"
-            />
-<Button
-              id="b_L"
-              style={numeroStyle}
-              onClick={this.onClick}
-              value="L"
-            />
-<br></br>
-<Button
-              id="b_Z"
-              style={numeroStyle}
-              onClick={this.onClick}
-              value="Z"
-            />
-<Button
-              id="b_X"
-              style={numeroStyle}
-              onClick={this.onClick}
-              value="X"
-            />
-<Button
-              id="b_C"
-              style={numeroStyle}
-              onClick={this.onClick}
-              value="C"
-            />
-<Button
-              id="b_V"
-              style={numeroStyle}
-              onClick={this.onClick}
-              value="V"
-            />
-<Button
-              id="b_B"
-              style={numeroStyle}
-              onClick={this.onClick}
-              value="B"
-            />
-<Button
-              id="b_N"
-              style={numeroStyle}
-              onClick={this.onClick}
-              value="N"
-            />
-<Button
-              id="b_M"
-              style={numeroStyle}
-              onClick={this.onClick}
-              value="M"
-            />
-</div>
+          {["PA", "CE"].includes(this.props.beneficiario.tipoIdentificacion)
+            ? keyboard
+            : numericKeyboard}
+
           <div id="aceptar_borrar">
             <Button
               id="borrar_button"

@@ -17,7 +17,8 @@ const initialState = {
   contrato: {},
   tiraAuditora: {},
   idTransaccion: 0,
-  transaccion: ""
+  transaccion: "",
+  valeElectronico: []
 };
 
 export default function(state = initialState, action) {

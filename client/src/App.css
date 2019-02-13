@@ -41,7 +41,12 @@
   color: white;
   width: 87%;
   border: 0px;
-  background: -webkit-linear-gradient(top, rgba(130,193,86,0.5) 0%,rgba(135,197,85,0.5) 36%,rgba(91,165,79,0.5) 100%);
+  background: -webkit-linear-gradient(
+    top,
+    rgba(130, 193, 86, 0.5) 0%,
+    rgba(135, 197, 85, 0.5) 36%,
+    rgba(91, 165, 79, 0.5) 100%
+  );
 }
 
 #error_message_compra {
@@ -52,7 +57,12 @@
   color: white;
   width: 87%;
   border: 0px;
-  background: -webkit-linear-gradient(top, rgba(130,193,86,0.5) 0%,rgba(135,197,85,0.5) 36%,rgba(91,165,79,0.5) 100%);
+  background: -webkit-linear-gradient(
+    top,
+    rgba(130, 193, 86, 0.5) 0%,
+    rgba(135, 197, 85, 0.5) 36%,
+    rgba(91, 165, 79, 0.5) 100%
+  );
 }
 
 #error_message_contratos {
@@ -63,7 +73,12 @@
   color: white;
   width: 87%;
   border: 0px;
-  background: -webkit-linear-gradient(top, rgba(130,193,86,0.5) 0%,rgba(135,197,85,0.5) 36%,rgba(91,165,79,0.5) 100%);
+  background: -webkit-linear-gradient(
+    top,
+    rgba(130, 193, 86, 0.5) 0%,
+    rgba(135, 197, 85, 0.5) 36%,
+    rgba(91, 165, 79, 0.5) 100%
+  );
 }
 
 #error_message_cancelados {
@@ -73,7 +88,12 @@
   color: white;
   width: 87%;
   border: 0px;
-  background: -webkit-linear-gradient(top, rgba(130,193,86,0.5) 0%,rgba(135,197,85,0.5) 36%,rgba(91,165,79,0.5) 100%);
+  background: -webkit-linear-gradient(
+    top,
+    rgba(130, 193, 86, 0.5) 0%,
+    rgba(135, 197, 85, 0.5) 36%,
+    rgba(91, 165, 79, 0.5) 100%
+  );
 }
 
 #spinner_compra {
@@ -111,7 +131,7 @@
   font-size: 1em;
   top: 440px;
   left: 190px;
-  
+
   font-size: 20px;
   color: white;
 }
@@ -145,14 +165,14 @@
 #aceptar_borrar {
   position: absolute;
   top: 1025px;
-  outline:0 !important;
+  outline: 0 !important;
 }
 
 #aceptar_borrar_cantidad {
   position: absolute;
   top: 1065px;
   left: 20px;
-  outline:0 !important;
+  outline: 0 !important;
 }
 
 #checkbox {
@@ -211,7 +231,7 @@
 
 .boton_contrato {
   background: url("./img/buttons/primario.png");
-  outline:0 !important;
+  outline: 0 !important;
 }
 
 #contratoSinCompra {
@@ -243,8 +263,7 @@
   border: 0px;
   font-weight: bold;
   font-family: "FNB Sans Regular";
-  outline:0 !important;
-
+  outline: 0 !important;
 }
 
 #info_contrato {
@@ -396,7 +415,7 @@
   color: black;
   align-content: center;
   text-align: center;
-  vertical-align: middle;;
+  vertical-align: middle;
 }
 
 .tipoId {
@@ -450,6 +469,14 @@
   left: 250px;
 }
 
+#mensaje_vales {
+  position: absolute;
+  font-size: 1em;
+  top: 200px;
+  width: 400px;
+  left: 250px;
+}
+
 #imprimir {
   background: url("./img/buttons/imprimir.png");
   position: absolute;
@@ -493,7 +520,7 @@
   top: 335px;
   left: 334px;
   border: 0px;
-  outline:0 !important;
+  outline: 0 !important;
 }
 
 #reintentar:hover {
@@ -530,7 +557,7 @@
   font-size: 1em;
   top: 1220px;
   left: 40px;
-  outline:0 !important;
+  outline: 0 !important;
   font-size: 40px;
   color: white;
   border: 1px;
@@ -546,7 +573,7 @@
   font-size: 1em;
   top: 1260px;
   left: 20px;
-  outline:0 !important;
+  outline: 0 !important;
   font-size: 40px;
   color: white;
   border: 1px;
@@ -561,7 +588,7 @@
   position: absolute;
   left: 384px;
   border: 1px;
-  outline:0 !important;
+  outline: 0 !important;
 }
 
 #aceptar_button:hover {
@@ -573,7 +600,7 @@
   position: absolute;
   left: 101px;
   border: 1px;
-  outline:0 !important;
+  outline: 0 !important;
 }
 
 #borrar_button:hover {
@@ -587,7 +614,7 @@
   background: url("./img/buttons/1.png");
   position: absolute;
   border: 1px;
-  outline:0 !important;
+  outline: 0 !important;
 }
 
 #dos {
@@ -595,7 +622,7 @@
   position: absolute;
   border: 1px;
   left: 118px;
-  outline:0 !important;
+  outline: 0 !important;
 }
 
 #tres {
@@ -603,7 +630,7 @@
   position: absolute;
   border: 1px;
   left: 236px;
-  outline:0 !important;
+  outline: 0 !important;
 }
 
 #cuatro {
@@ -611,7 +638,7 @@
   position: absolute;
   border: 1px;
   top: 110px;
-  outline:0 !important;
+  outline: 0 !important;
 }
 
 #cinco {
@@ -620,7 +647,7 @@
   border: 1px;
   left: 118px;
   top: 110px;
-  outline:0 !important;
+  outline: 0 !important;
 }
 
 #seis {
@@ -629,7 +656,7 @@
   border: 1px;
   left: 236px;
   top: 110px;
-  outline:0 !important;
+  outline: 0 !important;
 }
 
 #siete {
@@ -637,7 +664,7 @@
   position: absolute;
   border: 1px;
   top: 220px;
-  outline:0 !important;
+  outline: 0 !important;
 }
 
 #ocho {
@@ -646,7 +673,7 @@
   border: 1px;
   left: 118px;
   top: 220px;
-  outline:0 !important;
+  outline: 0 !important;
 }
 
 #nueve {
@@ -655,7 +682,7 @@
   border: 1px;
   left: 236px;
   top: 220px;
-  outline:0 !important;
+  outline: 0 !important;
 }
 
 #cero {
@@ -664,7 +691,7 @@
   border: 1px;
   left: 118px;
   top: 330px;
-  outline:0 !important;
+  outline: 0 !important;
 }
 
 #uno:hover {
@@ -749,7 +776,12 @@
   color: white;
   border: 0px;
   width: 87%;
-  background: -webkit-linear-gradient(top, rgba(130,193,86,0.5) 0%,rgba(135,197,85,0.5) 36%,rgba(91,165,79,0.5) 100%);
+  background: -webkit-linear-gradient(
+    top,
+    rgba(130, 193, 86, 0.5) 0%,
+    rgba(135, 197, 85, 0.5) 36%,
+    rgba(91, 165, 79, 0.5) 100%
+  );
 }
 
 #error_message_cantidad {
@@ -760,7 +792,12 @@
   font-size: 22px;
   color: white;
   width: 350px;
-  background: -webkit-linear-gradient(top, rgba(130,193,86,0.5) 0%,rgba(135,197,85,0.5) 36%,rgba(91,165,79,0.5) 100%);
+  background: -webkit-linear-gradient(
+    top,
+    rgba(130, 193, 86, 0.5) 0%,
+    rgba(135, 197, 85, 0.5) 36%,
+    rgba(91, 165, 79, 0.5) 100%
+  );
 }
 /* Inicio de CSS para Pantalla de Identificación Especial*/
 #keyboard_2 {
@@ -769,14 +806,14 @@
   left: 2%;
   width: 735px;
   align-content: center;
-	text-align: center;
+  text-align: center;
 }
 #b_1 {
   background: url("./img/buttons/1.png");
   background-position: center;
   background-size: cover;
   border: 0px;
-  outline:0 !important;
+  outline: 0 !important;
 }
 #b_1:hover {
   background: url("./img/buttons/1_h.png");
@@ -789,7 +826,7 @@
   background-position: center;
   background-size: cover;
   border: 0px;
-  outline:0 !important;
+  outline: 0 !important;
 }
 #b_2:hover {
   background: url("./img/buttons/2_h.png");
@@ -802,19 +839,20 @@
   background-position: center;
   background-size: cover;
   border: 0px;
-  outline:0 !important;
+  outline: 0 !important;
 }
 #b_3:hover {
   background: url("./img/buttons/3_h.png");
   background-position: center;
   background-size: cover;
   border: 0px;
-}#b_4 {
+}
+#b_4 {
   background: url("./img/buttons/4.png");
   background-position: center;
   background-size: cover;
   border: 0px;
-  outline:0 !important;
+  outline: 0 !important;
 }
 #b_4:hover {
   background: url("./img/buttons/4_h.png");
@@ -827,7 +865,7 @@
   background-position: center;
   background-size: cover;
   border: 0px;
-  outline:0 !important;
+  outline: 0 !important;
 }
 #b_5:hover {
   background: url("./img/buttons/5_h.png");
@@ -840,7 +878,7 @@
   background-position: center;
   background-size: cover;
   border: 0px;
-  outline:0 !important;
+  outline: 0 !important;
 }
 #b_6:hover {
   background: url("./img/buttons/6_h.png");
@@ -853,7 +891,7 @@
   background-position: center;
   background-size: cover;
   border: 0px;
-  outline:0 !important;
+  outline: 0 !important;
 }
 #b_7:hover {
   background: url("./img/buttons/7_h.png");
@@ -866,7 +904,7 @@
   background-position: center;
   background-size: cover;
   border: 0px;
-  outline:0 !important;
+  outline: 0 !important;
 }
 #b_8:hover {
   background: url("./img/buttons/8_h.png");
@@ -879,7 +917,7 @@
   background-position: center;
   background-size: cover;
   border: 0px;
-  outline:0 !important;
+  outline: 0 !important;
 }
 #b_9:hover {
   background: url("./img/buttons/9_h.png");
@@ -892,7 +930,7 @@
   background-position: center;
   background-size: cover;
   border: 0px;
-  outline:0 !important;
+  outline: 0 !important;
 }
 #b_0:hover {
   background: url("./img/buttons/0_h.png");

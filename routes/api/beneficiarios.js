@@ -3,7 +3,7 @@ const soapRequest = require("easy-soap-request");
 const fs = require("fs");
 const router = express.Router();
 const xmlreader = require("xmlreader");
-const { consultaPrecio } = require("../../config/keys");
+const { consultaPrecio, contratosEspeciales } = require("../../config/keys");
 
 //Beneficiario validator
 const validateConsultaBeneficiario = require("../../validation/consultaBeneficiario");
@@ -421,6 +421,8 @@ router.post("/precio", (req, res) => {
           }
         });
       } catch (e) {
+        console.log(e);
+        console.log("Error");
         errors.mensaje =
           "No hay conexión con los servicios de Colsanitas, por favor intente de nuevo en unos minutos.";
         return res.status(400).json(errors);
@@ -448,6 +450,9 @@ const extraerContratos = contratosXml => {
       estatoTitularFamilia: contratoXml.InformacionBasicadelContrato.estadoTitularFamilia.text(),
       fechaPrestacionDeServicio: new Date(
         contratoXml.EstadoUsuarioPrestacionServicio.fechaConsultaPrestacionServicio.text()
+      ),
+      fechaFinVigencia: new Date(
+        contratoXml.InformacionBeneficiarios.fechaFinVigencia.text()
       )
     };
 
@@ -464,8 +469,23 @@ const extraerContratos = contratosXml => {
         }
       } else if (contrato.estadoContrato === "1") {
         //contrato cancelado, revisar si está o No HABILITADO
-        if (contrato.estadoUsuario === "HABILITADO") {
-          if (contrato.fechaConsultaPrestacionServicio >= Date.now()) {
+        var q = new Date();
+        var m = q.getMonth() + 1;
+        var d = q.getDay();
+        var y = q.getFullYear();
+
+        const currentDate = new Date(y, m, d);
+        console.log("Fecha Vigencia:", contrato.fechaFinVigencia);
+        console.log("Fecha Actual:", currentDate);
+        if (contrato.fechaFinVigencia > currentDate) {
+          contrato.error = false;
+        } else {
+          contrato.error =
+            "Contrato cancelado, acérquese a Asesoría integral o comuníquese a la Línea Nro. 4871920";
+        }
+        /*if (contrato.estadoUsuario === "HABILITADO") {
+          console.log("Fecha:", contrato.fechaFinVigencia);
+          if (contrato.fechaFinVigencia >= Date.now()) {
             //contrato cancelado pero aun vigente
             contrato.error = false;
           } else {
@@ -473,13 +493,24 @@ const extraerContratos = contratosXml => {
               "Contrato cancelado, acérquese a Asesoría integral o comuníquese a la Línea Nro. 4871920";
           }
         } else {
-          contrato.error =
-            "Contrato cancelado, acérquese a Asesoría integral o comuníquese a la Línea Nro. 4871920";
-        }
+          console.log("Fecha:", contrato.fechaFinVigencia);
+          console.log("Fecha:", Date.now());
+          if (contrato.fechaFinVigencia >= Date.now()) {
+            //contrato cancelado pero aun vigente
+            contrato.error = false;
+          } else {
+            contrato.error =
+              "Contrato cancelado, acérquese a Asesoría integral o comuníquese a la Línea Nro. 4871920";
+          }
+        }*/
       }
     } else {
       contrato.error =
         "El contrato seleccionado no requiere de la compra de Vales.";
+    }
+
+    if (contratosEspeciales.includes(contrato.numeroContrato)) {
+      contrato.error = "Este contrato no requiere de la compra de vales";
     }
     contratos.push(contrato);
   });

@@ -28,7 +28,8 @@ class Compra extends Component {
       errors: {},
       timeOut: null,
       registro: false,
-      imprimio: false
+      imprimio: false,
+      vales: ""
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleShow = this.handleShow.bind(this);
@@ -63,7 +64,7 @@ class Compra extends Component {
         this.setState({ imprimio: true });
         this.timeOut = setTimeout(function() {
           props.reiniciarCompra({});
-        }, 10000);
+        }, 15000);
       }
     }
   }
@@ -76,7 +77,7 @@ class Compra extends Component {
       if (!this.isEmpty(nextProps.errors)) {
         let tiempo = setTimeout(function() {
           props.reiniciarCompra({});
-        }, 10000);
+        }, 15000);
         this.timeOut = tiempo;
       }
     }
@@ -103,10 +104,23 @@ class Compra extends Component {
         }
       }
     }
+
+    if (
+      this.props.compra.valeElectronico !== nextProps.compra.valeElectronico
+    ) {
+      if (this.props.compra.valeElectronico.length > 0) {
+        let vales =
+          "El número de su(s) Vale(s) es: " +
+          this.props.compra.valeElectronico[0].Vales.codigoVale;
+        for (let i = 1; i < this.props.compra.valeElectronico.length; i++) {
+          vales += ", " + this.props.compra.valeElectronico[i].Vales.codigoVale;
+        }
+        this.setState({ vales: vales });
+      }
+    }
   }
 
   handleShow() {
-    console.log("Mostrar");
     this.setState({ show: true });
   }
 
@@ -144,7 +158,7 @@ class Compra extends Component {
         const props = this.props;
         this.timeOut = setTimeout(function() {
           props.reiniciarCompra({});
-        }, 10000);
+        }, 15000);
       }
     }
   }
@@ -269,6 +283,7 @@ class Compra extends Component {
             alt=""
           />
           <p id="mensaje_final">{this.state.data}</p>
+          <p id="mensaje_vales">{this.state.vales}</p>
           {botonFinal}
           {spinner}
 
