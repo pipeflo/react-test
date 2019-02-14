@@ -111,6 +111,14 @@ class Identificacion extends Component {
       fontSize: "45px",
       backgroundSize: "cover"
     };
+    const numeroStyle2 = {
+      width: "120px",
+      height: "120px",
+      marginBottom: "5px",
+      marginRight: "5px",
+      fontSize: "45px",
+      backgroundSize: "cover"
+    };
 
     let contenido;
 
@@ -161,54 +169,54 @@ class Identificacion extends Component {
 
     const numericKeyboard = (
       <div id="keyboard" className="form-group">
-        <Button id="uno" style={numeroStyle} onClick={this.onClick} value="1" />
-        <Button id="dos" style={numeroStyle} onClick={this.onClick} value="2" />
+        <Button id="uno" style={numeroStyle2} onClick={this.onClick} value="1" />
+        <Button id="dos" style={numeroStyle2} onClick={this.onClick} value="2" />
         <Button
           id="tres"
-          style={numeroStyle}
+          style={numeroStyle2}
           onClick={this.onClick}
           value="3"
         />
         <Button
           id="cuatro"
-          style={numeroStyle}
+          style={numeroStyle2}
           onClick={this.onClick}
           value="4"
         />
         <Button
           id="cinco"
-          style={numeroStyle}
+          style={numeroStyle2}
           onClick={this.onClick}
           value="5"
         />
         <Button
           id="seis"
-          style={numeroStyle}
+          style={numeroStyle2}
           onClick={this.onClick}
           value="6"
         />
         <Button
           id="siete"
-          style={numeroStyle}
+          style={numeroStyle2}
           onClick={this.onClick}
           value="7"
         />
         <Button
           id="ocho"
-          style={numeroStyle}
+          style={numeroStyle2}
           onClick={this.onClick}
           value="8"
         />
         <Button
           id="nueve"
-          style={numeroStyle}
+          style={numeroStyle2}
           onClick={this.onClick}
           value="9"
         />
 
         <Button
           id="cero"
-          style={numeroStyle}
+          style={numeroStyle2}
           onClick={this.onClick}
           value="0"
         />
