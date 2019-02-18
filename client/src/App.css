@@ -67,7 +67,7 @@
 
 #error_message_contratos {
   position: absolute;
-  top: 260px;
+  top: 210px;
   left: 50px;
   font-size: 22px;
   color: white;
@@ -223,7 +223,7 @@
 
 #contrato {
   position: absolute;
-  top: 410px;
+  top: 270px;
   left: 50px;
   font-size: 25px;
   color: #019fd9;
