@@ -153,6 +153,7 @@ class Compra extends Component {
       if (this.state.pagoExitoso) {
         let compra = Object.assign({}, this.state.compra); //creating copy of object
         compra.numeroAprobacion = respuesta.numeroAprobacion;
+        console.log("Registrando compra:", compra);
         this.props.registrarCompra(this.state.beneficiario, compra);
       } else {
         const props = this.props;

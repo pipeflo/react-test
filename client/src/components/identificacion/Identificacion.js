@@ -276,7 +276,7 @@ class Identificacion extends Component {
             />
           </label>
 
-          {["PA", "CE"].includes(this.props.beneficiario.tipoIdentificacion)
+          {["PA", "CD"].includes(this.props.beneficiario.tipoIdentificacion)
             ? keyboard
             : numericKeyboard}
 
