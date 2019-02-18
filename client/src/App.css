@@ -471,10 +471,10 @@
 
 #mensaje_vales {
   position: absolute;
-  font-size: 1em;
+  font-size: 18px;
   top: 200px;
   width: 400px;
-  left: 250px;
+  left: 100px;
 }
 
 #imprimir {
