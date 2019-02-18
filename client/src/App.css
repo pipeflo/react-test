@@ -232,6 +232,26 @@
   color: #019fd9;
 }
 
+#bt_contrato{
+  background: url("./img/buttons/primario.png");
+  background-position: center;
+  background-size: cover;
+  vertical-align: middle;
+  align-content: center;
+  border: 0px;
+  outline: 0 !important;
+}
+
+#bt_contrato:hover{
+  background: url("./img/buttons/primario_h.png");
+  background-position: center;
+  background-size: cover;
+  vertical-align: middle;
+  align-content: center;
+  border: 0px;
+  outline: 0 !important;
+}
+
 .boton_contrato {
   background: url("./img/buttons/primario.png");
   outline: 0 !important;

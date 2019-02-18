@@ -152,6 +152,7 @@ class Contratos extends Component {
             overflowWrap: "break-word",
 }}
           value={i}
+          id="btn_contrato"
           className="btn btn-primary boton_contrato"
           onClick={funciones.onClick}
           to="#"
