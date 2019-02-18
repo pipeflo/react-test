@@ -472,9 +472,10 @@
 #mensaje_vales {
   position: absolute;
   font-size: 20px;
-  top: 200px;
+  top: 240px;
   width: 500px;
   left: 80px;
+  text-align: left;
 }
 
 #imprimir {
