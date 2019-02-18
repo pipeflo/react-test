@@ -99,8 +99,11 @@ router.post("/consulta", (req, res) => {
             "OK"
           ) {
             //encontró beneficiario
-            let beneficiario = {};
-
+            let beneficiario = {
+              tipoIdentificacion: req.body.tipoIdentificacion,
+              numeroIdentificacion: req.body.numeroIdentificacion,
+              codTipoIdentificacion: req.body.codTipoIdentificacion
+            };
             if (
               respuesta["s:Envelope"][
                 "s:Body"
@@ -108,55 +111,17 @@ router.post("/consulta", (req, res) => {
               1
             ) {
               //Tiene un solo contrato
-              beneficiario = {
-                tipoIdentificacion: req.body.tipoIdentificacion,
-                numeroIdentificacion: req.body.numeroIdentificacion,
-                codTipoIdentificacion: req.body.codTipoIdentificacion,
-                nombre: respuesta["s:Envelope"][
-                  "s:Body"
-                ].ConsultarBeneficiarioSal.consultarBeneficiarioSal.Contrato.InformacionBeneficiarios.nombreBeneficiario
-                  .text()
-                  .replace(/_|,/g, function(x) {
-                    return x === "_" ? " " : ", ";
-                  }),
-                contratos: extraerContratos(
-                  respuesta["s:Envelope"]["s:Body"].ConsultarBeneficiarioSal
-                    .consultarBeneficiarioSal.Contrato
-                )
-              };
 
-              if (beneficiario.contratos[0].estadoContrato === "4") {
-                //contrato Liquidado, verificar si el usuario está o no HABILITADO
-                if (beneficiario.contratos[0].estadoUsuario === "HABILITADO") {
-                  //estado contato y estado usuario correctos
-                  beneficiario.contratos[0].error = false;
-                } else {
-                  //Estado de usuario NO HABILITADO
-                  beneficiario.contratos[0].error =
-                    "Su  contrato  se  encuentra pendiente de pagos acérquese a Asesoría integral o comuníquese a la Línea Nro. 4871920";
-                }
-              } else if (beneficiario.contratos[0].estadoContrato === "1") {
-                //contrato cancelado, revisar si está o no HABILITADO
-                if (
-                  beneficiario.contratos[0].EstadoUsuarioPrestacionServicio ===
-                  "HABILITADO"
-                ) {
-                  if (
-                    beneficiario.contratos[0].fechaConsultaPrestacionServicio >
-                    Date.now()
-                  ) {
-                    //contrato cancelado pero aun vigente
-                    beneficiario.contratos[0].error = false;
-                  } else {
-                    beneficiario.contratos[0].error =
-                      "Contrato cancelado, acérquese a Asesoría integral o comuníquese a la Línea Nro. 4871920";
-                  }
-                } else {
-                  beneficiario.contratos[0].error =
-                    "Contrato cancelado, acérquese a Asesoría integral o comuníquese a la Línea Nro. 4871920";
-                }
-              }
-              return res.json(beneficiario);
+              beneficiario.nombre = respuesta["s:Envelope"][
+                "s:Body"
+              ].ConsultarBeneficiarioSal.consultarBeneficiarioSal.Contrato.InformacionBeneficiarios.nombreBeneficiario
+                .text()
+                .replace(/_|,/g, function(x) {
+                  return x === "_" ? " " : ", ";
+                });
+              beneficiario.tipoUsuario = respuesta["s:Envelope"][
+                "s:Body"
+              ].ConsultarBeneficiarioSal.consultarBeneficiarioSal.Contrato.InformacionBeneficiarios.tipoUsuario.text();
             } else if (
               respuesta["s:Envelope"][
                 "s:Body"
@@ -164,25 +129,30 @@ router.post("/consulta", (req, res) => {
               1
             ) {
               //Tiene varios contratos
-              beneficiario = {
-                nombre: respuesta["s:Envelope"][
-                  "s:Body"
-                ].ConsultarBeneficiarioSal.consultarBeneficiarioSal.Contrato.at(
-                  0
-                )
-                  .InformacionBeneficiarios.nombreBeneficiario.text()
-                  .replace(/_|,/g, function(x) {
-                    return x === "_" ? " " : ", ";
-                  }),
-                tipoIdentificacion: req.body.tipoIdentificacion,
-                numeroIdentificacion: req.body.numeroIdentificacion,
-                codTipoIdentificacion: req.body.codTipoIdentificacion,
-                contratos: extraerContratos(
-                  respuesta["s:Envelope"]["s:Body"].ConsultarBeneficiarioSal
-                    .consultarBeneficiarioSal.Contrato
-                )
-              };
-              console.log(beneficiario);
+              beneficiario.nombre = respuesta["s:Envelope"][
+                "s:Body"
+              ].ConsultarBeneficiarioSal.consultarBeneficiarioSal.Contrato.at(0)
+                .InformacionBeneficiarios.nombreBeneficiario.text()
+                .replace(/_|,/g, function(x) {
+                  return x === "_" ? " " : ", ";
+                });
+              beneficiario.tipoUsuario = respuesta["s:Envelope"][
+                "s:Body"
+              ].ConsultarBeneficiarioSal.consultarBeneficiarioSal.Contrato.at(
+                0
+              ).InformacionBeneficiarios.tipoUsuario.text();
+            }
+            beneficiario.contratos = extraerContratos(
+              respuesta["s:Envelope"]["s:Body"].ConsultarBeneficiarioSal
+                .consultarBeneficiarioSal.Contrato
+            );
+            //Extrajo datos principales del Beneficiario
+            console.log(beneficiario);
+            if (beneficiario.tipoUruario !== "TITULAR") {
+              //El usuario es Beneficario, enviamos respuesta con contratos
+              return res.json(beneficiario);
+            } else {
+              //Buscamos si tiene más contratos
               return res.json(beneficiario);
             }
           } else {
@@ -221,6 +191,176 @@ router.post("/consulta", (req, res) => {
     })();
   }
 });
+
+// @Route  POST api/beneficiarios/consulta
+// @Desc   Consultar un beneficiario
+// @Access Public
+const consultarTitular = titular => {
+  //Ir y consultar usuario
+  const url =
+    "https://osiapppre02.colsanitas.com/services/ProxyContratoMP.ProxyContratoMPHttpSoap12Endpoint";
+  const headers = {
+    "user-agent": "sampleTest",
+    "Content-Type": "text/xml;charset=UTF-8",
+    soapAction: "http://www.colsanitas.com/ContratoMP/consultar"
+  };
+  const xml = `<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:con="http://colsanitas.com/ContratoMPServicio/" xmlns:nof="http://colsanitas.com/osi/comun/nofuncionales" xmlns:srv="http://colsanitas.com/osi/srv" xmlns:per="http://colsanitas.com/osi/comun/persona">
+<soapenv:Header>
+   <con:HeaderRqust>
+      <con:header>
+         <nof:messageHeader>
+            <nof:messageInfo>
+               <nof:tipoConsulta>1</nof:tipoConsulta>
+            </nof:messageInfo>
+         </nof:messageHeader>
+      </con:header>
+   </con:HeaderRqust>
+</soapenv:Header>
+<soapenv:Body>
+   <con:ConsultarEnt>
+      <con:consultarEnt>
+         <srv:Consultar>
+            <srv:IdentificacionContratanteTitFamilia>
+               <per:numIdentificacion>${
+                 titular.numeroIdentificacion
+               }</per:numIdentificacion>
+               <per:tipoIdentificacion>${
+                 titular.tipoIdentificacion
+               }</per:tipoIdentificacion>
+            </srv:IdentificacionContratanteTitFamilia>
+         </srv:Consultar>
+      </con:consultarEnt>
+   </con:ConsultarEnt>
+</soapenv:Body>
+</soapenv:Envelope>`;
+
+  (async () => {
+    try {
+      const { response } = await soapRequest(url, headers, xml, 10000); // Optional timeout parameter(milliseconds)
+      const { body, statusCode } = response;
+
+      xmlreader.read(body, function(err, respuesta) {
+        if (err) return console.log("Error reading XML:", err);
+
+        if (
+          respuesta["s:Envelope"]["s:Header"][
+            "h:HeaderRspns"
+          ].header.responseStatus.businessException.errorDetails.errorCode.text() ===
+          "OK"
+        ) {
+          //encontró beneficiario
+          let beneficiario = {};
+
+          if (
+            respuesta["s:Envelope"][
+              "s:Body"
+            ].ConsultarSal.consultarSal.contratosMP.count() ===
+            titular.contratos.length
+          ) {
+            //Tiene el mismo número de contratos encontrados
+            return titular;
+          } else {
+            //Tiene contratos diferentes, los revisamos para tomar los diferentes
+            const numContratos = titular.contratos.map(
+              contrato => contrato.numContrato
+            );
+            respuesta["s:Envelope"][
+              "s:Body"
+            ].ConsultarSal.consultarSal.contratosMP.each((i, contratoXml) => {
+              if (
+                !numContratos.includes(contratoXml.Caratula.numContrato.text())
+              ) {
+                //El contrato es adicional, lo procesamos
+                const contrato = {
+                  nombreProducto: contratoXml.Caratula.nombreProducto.text(),
+                  numeroContrato: contratoXml.Caratula.numContrato.text(),
+                  estadoContrato: contratoXml.Caratula.codEstadoContrato.text(),
+                  estadoUsuario: contratoXml.EstadoUsuarioPrestacionServicio.estadoHabilitado.text(),
+                  tipoUsuario: contratoXml.InformacionBeneficiarios.tipoUsuario.text(),
+                  codigoTipoUsuario: contratoXml.InformacionBeneficiarios.codigoTipoUsuario.text(),
+                  codigoCompania: contratoXml.InformacionBasicadelContrato.producto.text(),
+                  nombreCompania: contratoXml.InformacionBasicadelContrato.nombreProducto.text(),
+                  codigoPlan: contratoXml.InformacionBasicadelContrato.codigoPlan.text(),
+                  nombrePlan: contratoXml.InformacionBasicadelContrato.nombrePlan.text(),
+                  numeroFamilia: contratoXml.InformacionBasicadelContrato.numeroFamilia.text(),
+                  estatoTitularFamilia: contratoXml.InformacionBasicadelContrato.estadoTitularFamilia.text(),
+                  fechaPrestacionDeServicio: new Date(
+                    contratoXml.EstadoUsuarioPrestacionServicio.fechaConsultaPrestacionServicio.text()
+                  ),
+                  fechaFinVigencia: new Date(
+                    contratoXml.InformacionBeneficiarios.fechaFinVigencia.text()
+                  )
+                };
+
+                if (!["55", "32", "16", "67"].includes(contrato.codigoPlan)) {
+                  if (contrato.estadoContrato === "4") {
+                    //contrato Liquidado, verificar si el usuario está o no HABILITADO
+                    if (contrato.estadoUsuario === "HABILITADO") {
+                      //estado contrato y estado usuario correctos
+                      contrato.error = false;
+                    } else {
+                      //Estado de usuario NO HABILITADO
+                      contrato.error =
+                        "Su  contrato  se  encuentra pendiente de pagos acérquese a Asesoría integral o comuníquese a la Línea Nro. 4871920";
+                    }
+                  } else if (contrato.estadoContrato === "1") {
+                    //contrato cancelado, revisar si está o No HABILITADO
+                    var q = new Date();
+                    var m = q.getMonth();
+                    var d = q.getDate();
+                    var y = q.getFullYear();
+
+                    const currentDate = new Date(y, m, d);
+                    console.log("Fecha Vigencia:", contrato.fechaFinVigencia);
+                    console.log("Fecha Actual:", currentDate);
+                    if (contrato.fechaFinVigencia >= currentDate) {
+                      contrato.error = false;
+                    } else {
+                      contrato.error =
+                        "Contrato cancelado, acérquese a Asesoría integral o comuníquese a la Línea Nro. 4871920";
+                    }
+                    /*if (contrato.estadoUsuario === "HABILITADO") {
+                      console.log("Fecha:", contrato.fechaFinVigencia);
+                      if (contrato.fechaFinVigencia >= Date.now()) {
+                        //contrato cancelado pero aun vigente
+                        contrato.error = false;
+                      } else {
+                        contrato.error =
+                          "Contrato cancelado, acérquese a Asesoría integral o comuníquese a la Línea Nro. 4871920";
+                      }
+                    } else {
+                      console.log("Fecha:", contrato.fechaFinVigencia);
+                      console.log("Fecha:", Date.now());
+                      if (contrato.fechaFinVigencia >= Date.now()) {
+                        //contrato cancelado pero aun vigente
+                        contrato.error = false;
+                      } else {
+                        contrato.error =
+                          "Contrato cancelado, acérquese a Asesoría integral o comuníquese a la Línea Nro. 4871920";
+                      }
+                    }*/
+                  }
+                }
+              }
+            });
+          }
+        } else {
+          console.log(
+            "Error consultando Titular:",
+            respuesta["s:Envelope"]["s:Header"][
+              "h:HeaderRspns"
+            ].header.responseStatus.businessException.errorDetails.errorCode.text()
+          );
+          return titular;
+        }
+      });
+    } catch (e) {
+      errors.mensaje =
+        "No hay conexión con los servicios de Colsanitas, por favor intente de nuevo en unos minutos.";
+      return titular;
+    }
+  })();
+};
 
 // @Route  POST api/beneficiarios/ciudad
 // @Desc   Traer código de ciudad de un contrato
@@ -445,7 +585,6 @@ const extraerContratos = contratosXml => {
       nombreCompania: contratoXml.InformacionBasicadelContrato.nombreProducto.text(),
       codigoPlan: contratoXml.InformacionBasicadelContrato.codigoPlan.text(),
       nombrePlan: contratoXml.InformacionBasicadelContrato.nombrePlan.text(),
-      numeroContrato: contratoXml.InformacionBasicadelContrato.numContrato.text(),
       numeroFamilia: contratoXml.InformacionBasicadelContrato.numeroFamilia.text(),
       estatoTitularFamilia: contratoXml.InformacionBasicadelContrato.estadoTitularFamilia.text(),
       fechaPrestacionDeServicio: new Date(
@@ -470,14 +609,14 @@ const extraerContratos = contratosXml => {
       } else if (contrato.estadoContrato === "1") {
         //contrato cancelado, revisar si está o No HABILITADO
         var q = new Date();
-        var m = q.getMonth() + 1;
-        var d = q.getDay();
+        var m = q.getMonth();
+        var d = q.getDate();
         var y = q.getFullYear();
 
         const currentDate = new Date(y, m, d);
         console.log("Fecha Vigencia:", contrato.fechaFinVigencia);
         console.log("Fecha Actual:", currentDate);
-        if (contrato.fechaFinVigencia > currentDate) {
+        if (contrato.fechaFinVigencia >= currentDate) {
           contrato.error = false;
         } else {
           contrato.error =
