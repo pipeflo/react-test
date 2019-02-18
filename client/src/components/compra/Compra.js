@@ -29,7 +29,8 @@ class Compra extends Component {
       timeOut: null,
       registro: false,
       imprimio: false,
-      vales: ""
+      vales: "",
+      procesoCompra: false
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleShow = this.handleShow.bind(this);
@@ -141,6 +142,10 @@ class Compra extends Component {
   handleData(data) {
     //let result = JSON.parse(data);
     //this.setState({ count: this.state.count + result.movement });
+    if (!this.state.procesoCompra){
+
+    
+    this.setState({procesoCompra: true});
     const respuesta = JSON.parse(data);
     if (respuesta.reintentar) {
       this.props.iniciarCompra(this.props.compra);
@@ -162,6 +167,7 @@ class Compra extends Component {
         }, 15000);
       }
     }
+  }
   }
 
   handleClose(e) {
