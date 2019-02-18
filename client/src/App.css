@@ -51,11 +51,11 @@
 
 #error_message_compra {
   position: absolute;
-  top: 400px;
+  top: 500px;
   left: 50px;
   font-size: 22px;
   color: white;
-  width: 87%;
+  width: 600px;
   border: 0px;
   background: -webkit-linear-gradient(
     top,
@@ -148,6 +148,7 @@
   font-size: 50px;
   text-align: right;
   color: black;
+  outline: 0 !important;
 }
 
 #usr::-webkit-input-placeholder {
@@ -379,6 +380,7 @@
   font-size: 50px;
   text-align: right;
   color: black;
+  outline: 0 !important;
 }
 
 #keyboardCantidad {
