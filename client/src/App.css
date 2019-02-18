@@ -217,7 +217,10 @@
 
 #contract_1 {
   position: absolute;
-  top: 330px;
+  outline: 0 !important;
+  background: transparent;
+  border: 0px;
+  top: 350px;
   left: 140px;
 }
 
