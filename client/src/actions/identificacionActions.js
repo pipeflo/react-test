@@ -15,6 +15,7 @@ export const buscarBenediciario = identificacionData => dispatch => {
   axios
     .post("/api/beneficiarios/consulta", identificacionData)
     .then(res => {
+      console.log("Respuesta /beneficiarios/consulta:", res.data);
       const payload = res.data;
       dispatch(setBeneficiario(payload));
     })

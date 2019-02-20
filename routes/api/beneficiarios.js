@@ -3,7 +3,11 @@ const soapRequest = require("easy-soap-request");
 const fs = require("fs");
 const router = express.Router();
 const xmlreader = require("xmlreader");
-const { consultaPrecio, contratosEspeciales } = require("../../config/keys");
+const {
+  consultaPrecio,
+  contratosEspeciales,
+  planesExcluidos
+} = require("../../config/keys");
 
 //Beneficiario validator
 const validateConsultaBeneficiario = require("../../validation/consultaBeneficiario");
@@ -147,13 +151,16 @@ router.post("/consulta", (req, res) => {
                 .consultarBeneficiarioSal.Contrato
             );
             //Extrajo datos principales del Beneficiario
-            console.log(beneficiario);
-            if (beneficiario.tipoUruario !== "TITULAR") {
+
+            if (beneficiario.tipoUsuario !== "TITULAR") {
               //El usuario es Beneficario, enviamos respuesta con contratos
               return res.json(beneficiario);
             } else {
               //Buscamos si tiene más contratos
-              return res.json(beneficiario);
+              consultarTitular(beneficiario, function(beneficiario) {
+                console.log("Retorono nuevo beneficiario:", beneficiario);
+                return res.json(beneficiario);
+              });
             }
           } else {
             console.log(
@@ -195,7 +202,7 @@ router.post("/consulta", (req, res) => {
 // @Route  POST api/beneficiarios/consulta
 // @Desc   Consultar un beneficiario
 // @Access Public
-const consultarTitular = titular => {
+const consultarTitular = (titular, callback) => {
   //Ir y consultar usuario
   const url =
     "https://osiapppre02.colsanitas.com/services/ProxyContratoMP.ProxyContratoMPHttpSoap12Endpoint";
@@ -238,7 +245,6 @@ const consultarTitular = titular => {
     try {
       const { response } = await soapRequest(url, headers, xml, 10000); // Optional timeout parameter(milliseconds)
       const { body, statusCode } = response;
-
       xmlreader.read(body, function(err, respuesta) {
         if (err) return console.log("Error reading XML:", err);
 
@@ -249,21 +255,20 @@ const consultarTitular = titular => {
           "OK"
         ) {
           //encontró beneficiario
-          let beneficiario = {};
-
           if (
             respuesta["s:Envelope"][
               "s:Body"
-            ].ConsultarSal.consultarSal.contratosMP.count() ===
+            ].ConsultarSal.consultarSal.contratosMP.count() <=
             titular.contratos.length
           ) {
-            //Tiene el mismo número de contratos encontrados
-            return titular;
+            //Tiene el mismo o menor número de contratos encontrados
+            callback(titular);
           } else {
             //Tiene contratos diferentes, los revisamos para tomar los diferentes
             const numContratos = titular.contratos.map(
-              contrato => contrato.numContrato
+              contrato => contrato.numeroContrato
             );
+            console.log("Numeros de contratos previos:", numContratos);
             respuesta["s:Envelope"][
               "s:Body"
             ].ConsultarSal.consultarSal.contratosMP.each((i, contratoXml) => {
@@ -275,75 +280,55 @@ const consultarTitular = titular => {
                   nombreProducto: contratoXml.Caratula.nombreProducto.text(),
                   numeroContrato: contratoXml.Caratula.numContrato.text(),
                   estadoContrato: contratoXml.Caratula.codEstadoContrato.text(),
-                  estadoUsuario: contratoXml.EstadoUsuarioPrestacionServicio.estadoHabilitado.text(),
-                  tipoUsuario: contratoXml.InformacionBeneficiarios.tipoUsuario.text(),
-                  codigoTipoUsuario: contratoXml.InformacionBeneficiarios.codigoTipoUsuario.text(),
-                  codigoCompania: contratoXml.InformacionBasicadelContrato.producto.text(),
-                  nombreCompania: contratoXml.InformacionBasicadelContrato.nombreProducto.text(),
-                  codigoPlan: contratoXml.InformacionBasicadelContrato.codigoPlan.text(),
-                  nombrePlan: contratoXml.InformacionBasicadelContrato.nombrePlan.text(),
-                  numeroFamilia: contratoXml.InformacionBasicadelContrato.numeroFamilia.text(),
-                  estatoTitularFamilia: contratoXml.InformacionBasicadelContrato.estadoTitularFamilia.text(),
-                  fechaPrestacionDeServicio: new Date(
-                    contratoXml.EstadoUsuarioPrestacionServicio.fechaConsultaPrestacionServicio.text()
-                  ),
+                  estadoUsuario: contratoXml.TitularFamilia.estadoTitularFamilia.text(),
+                  tipoUsuario: "TITULAR",
+                  codigoTipoUsuario: "21",
+                  codigoCompania: contratoXml.Caratula.producto.text(),
+                  nombreCompania: contratoXml.Caratula.nombreProducto.text(),
+                  codigoPlan: contratoXml.Caratula.codigoPlan.text(),
+                  nombrePlan: contratoXml.Caratula.nombrePlan.text(),
+                  numeroFamilia: contratoXml.TitularFamilia.numeroFamilia.text(),
+                  estadoTitularFamilia: contratoXml.TitularFamilia.estadoTitularFamilia.text(),
+                  fechaPrestacionDeServicio: new Date(),
                   fechaFinVigencia: new Date(
-                    contratoXml.InformacionBeneficiarios.fechaFinVigencia.text()
+                    contratoXml.TitularFamilia.fechaFinVigencia.text()
                   )
                 };
 
-                if (!["55", "32", "16", "67"].includes(contrato.codigoPlan)) {
+                if (contratosEspeciales.includes(contrato.numeroContrato)) {
+                  contrato.error =
+                    "El contrato seleccionado no requiere de la compra de Vales.";
+                }
+
+                if (
+                  planesExcluidos.includes(contrato.codigoPlan) &&
+                  contratosEspeciales.includes(contrato.numeroContrato)
+                ) {
+                  contrato.error =
+                    "El contrato seleccionado no requiere de la compra de Vales.";
+                } else {
                   if (contrato.estadoContrato === "4") {
-                    //contrato Liquidado, verificar si el usuario está o no HABILITADO
-                    if (contrato.estadoUsuario === "HABILITADO") {
-                      //estado contrato y estado usuario correctos
-                      contrato.error = false;
-                    } else {
-                      //Estado de usuario NO HABILITADO
-                      contrato.error =
-                        "Su  contrato  se  encuentra pendiente de pagos acérquese a Asesoría integral o comuníquese a la Línea Nro. 4871920";
-                    }
+                    contrato.error = false;
                   } else if (contrato.estadoContrato === "1") {
-                    //contrato cancelado, revisar si está o No HABILITADO
                     var q = new Date();
                     var m = q.getMonth();
                     var d = q.getDate();
                     var y = q.getFullYear();
 
                     const currentDate = new Date(y, m, d);
-                    console.log("Fecha Vigencia:", contrato.fechaFinVigencia);
-                    console.log("Fecha Actual:", currentDate);
                     if (contrato.fechaFinVigencia >= currentDate) {
                       contrato.error = false;
                     } else {
                       contrato.error =
                         "Contrato cancelado, acérquese a Asesoría integral o comuníquese a la Línea Nro. 4871920";
                     }
-                    /*if (contrato.estadoUsuario === "HABILITADO") {
-                      console.log("Fecha:", contrato.fechaFinVigencia);
-                      if (contrato.fechaFinVigencia >= Date.now()) {
-                        //contrato cancelado pero aun vigente
-                        contrato.error = false;
-                      } else {
-                        contrato.error =
-                          "Contrato cancelado, acérquese a Asesoría integral o comuníquese a la Línea Nro. 4871920";
-                      }
-                    } else {
-                      console.log("Fecha:", contrato.fechaFinVigencia);
-                      console.log("Fecha:", Date.now());
-                      if (contrato.fechaFinVigencia >= Date.now()) {
-                        //contrato cancelado pero aun vigente
-                        contrato.error = false;
-                      } else {
-                        contrato.error =
-                          "Contrato cancelado, acérquese a Asesoría integral o comuníquese a la Línea Nro. 4871920";
-                      }
-                    }*/
                   }
                 }
+                titular.contratos.push(contrato);
               }
             });
           }
+          callback(titular);
         } else {
           console.log(
             "Error consultando Titular:",
@@ -351,7 +336,7 @@ const consultarTitular = titular => {
               "h:HeaderRspns"
             ].header.responseStatus.businessException.errorDetails.errorCode.text()
           );
-          return titular;
+          callback(titular);
         }
       });
     } catch (e) {
@@ -586,7 +571,7 @@ const extraerContratos = contratosXml => {
       codigoPlan: contratoXml.InformacionBasicadelContrato.codigoPlan.text(),
       nombrePlan: contratoXml.InformacionBasicadelContrato.nombrePlan.text(),
       numeroFamilia: contratoXml.InformacionBasicadelContrato.numeroFamilia.text(),
-      estatoTitularFamilia: contratoXml.InformacionBasicadelContrato.estadoTitularFamilia.text(),
+      estadoTitularFamilia: contratoXml.InformacionBasicadelContrato.estadoTitularFamilia.text(),
       fechaPrestacionDeServicio: new Date(
         contratoXml.EstadoUsuarioPrestacionServicio.fechaConsultaPrestacionServicio.text()
       ),
@@ -595,7 +580,13 @@ const extraerContratos = contratosXml => {
       )
     };
 
-    if (!["55", "32", "16", "67"].includes(contrato.codigoPlan)) {
+    if (
+      planesExcluidos.includes(contrato.codigoPlan) &&
+      contratosEspeciales.includes(contrato.numeroContrato)
+    ) {
+      contrato.error =
+        "El contrato seleccionado no requiere de la compra de Vales.";
+    } else {
       if (contrato.estadoContrato === "4") {
         //contrato Liquidado, verificar si el usuario está o no HABILITADO
         if (contrato.estadoUsuario === "HABILITADO") {
@@ -643,13 +634,11 @@ const extraerContratos = contratosXml => {
           }
         }*/
       }
-    } else {
-      contrato.error =
-        "El contrato seleccionado no requiere de la compra de Vales.";
     }
 
     if (contratosEspeciales.includes(contrato.numeroContrato)) {
-      contrato.error = "Este contrato no requiere de la compra de vales";
+      contrato.error =
+        "El contrato seleccionado no requiere de la compra de Vales.";
     }
     contratos.push(contrato);
   });

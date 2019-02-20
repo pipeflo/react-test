@@ -12,6 +12,7 @@ module.exports = {
     codigoEstacion: "602",
     aplicacionAsigna: "KIOSKO_602"
   },
+  planesExcluidos: ["55", "32", "16", "67", "33", "39"],
   contratosEspeciales: [
     "101445",
     "101456",
