@@ -142,32 +142,30 @@ class Compra extends Component {
   handleData(data) {
     //let result = JSON.parse(data);
     //this.setState({ count: this.state.count + result.movement });
-    if (!this.state.procesoCompra){
-
-    
-    this.setState({procesoCompra: true});
-    const respuesta = JSON.parse(data);
-    if (respuesta.reintentar) {
-      this.props.iniciarCompra(this.props.compra);
-    } else {
-      this.setState({
-        data: respuesta.message,
-        pagoExitoso: respuesta.pagoExitoso,
-        show: true
-      });
-      if (this.state.pagoExitoso) {
-        let compra = Object.assign({}, this.state.compra); //creating copy of object
-        compra.numeroAprobacion = respuesta.numeroAprobacion;
-        console.log("Registrando compra:", compra);
-        this.props.registrarCompra(this.state.beneficiario, compra);
+    if (!this.state.procesoCompra) {
+      this.setState({ procesoCompra: true });
+      const respuesta = JSON.parse(data);
+      if (respuesta.reintentar) {
+        this.props.iniciarCompra(this.props.compra);
       } else {
-        const props = this.props;
-        this.timeOut = setTimeout(function() {
-          props.reiniciarCompra({});
-        }, 15000);
+        this.setState({
+          data: respuesta.message,
+          pagoExitoso: respuesta.pagoExitoso,
+          show: true
+        });
+        if (this.state.pagoExitoso) {
+          let compra = Object.assign({}, this.state.compra); //creating copy of object
+          compra.numeroAprobacion = respuesta.numeroAprobacion;
+          console.log("Registrando compra:", compra);
+          this.props.registrarCompra(this.state.beneficiario, compra);
+        } else {
+          const props = this.props;
+          this.timeOut = setTimeout(function() {
+            props.reiniciarCompra({});
+          }, 15000);
+        }
       }
     }
-  }
   }
 
   handleClose(e) {
@@ -176,12 +174,12 @@ class Compra extends Component {
     if (e.target.value === "REINTENTAR") {
       //this.props.history.push("/cantidad");
       this.props.iniciarCompra(this.props.compra);
-      this.setState({ show: false });
+      this.setState({ show: false, procesoCompra: false });
     } else if (e.target.value === "IMPRIMIR") {
       console.log("Vamos a imprimir");
       this.props.consultarTiraAuditoria(this.props.compra);
     } else if (e.target.value === "SALIR") {
-      console.log("di en salir");
+      this.setState({ show: false, procesoCompra: false });
       this.props.reiniciarCompra({});
     }
   }
