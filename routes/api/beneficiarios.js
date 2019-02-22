@@ -301,7 +301,7 @@ const consultarTitular = (titular, callback) => {
                 }
 
                 if (
-                  planesExcluidos.includes(contrato.codigoPlan) &&
+                  planesExcluidos.includes(contrato.codigoPlan) ||
                   contratosEspeciales.includes(contrato.numeroContrato)
                 ) {
                   contrato.error =
@@ -581,7 +581,7 @@ const extraerContratos = contratosXml => {
     };
 
     if (
-      planesExcluidos.includes(contrato.codigoPlan) &&
+      planesExcluidos.includes(contrato.codigoPlan) ||
       contratosEspeciales.includes(contrato.numeroContrato)
     ) {
       contrato.error =
