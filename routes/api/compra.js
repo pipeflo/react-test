@@ -34,7 +34,7 @@ router.post("/iniciar", (req, res) => {
   }
 
   //Consultar precio Vale
-  const stringCompra = `01,${req.body.valorTotal},1,KIOSKO_602,${
+  const stringCompra = `01,${req.body.valorTotal},0,KIOSKO_602,${
     req.body.idTransaccion
   },0,0,dataf001,`;
   const lrc = calculateLRC(stringCompra);
