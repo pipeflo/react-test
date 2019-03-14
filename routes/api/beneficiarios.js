@@ -6,7 +6,8 @@ const xmlreader = require("xmlreader");
 const {
   consultaPrecio,
   contratosEspeciales,
-  planesExcluidos
+  planesExcluidos,
+  codigoCompaniaExcluidos
 } = require("../../config/keys");
 
 //Beneficiario validator
@@ -157,7 +158,7 @@ router.post("/consulta", (req, res) => {
               return res.json(beneficiario);
             } else {
               //Buscamos si tiene más contratos
-              consultarTitular(beneficiario, function(beneficiario) {
+              consultarTitular(beneficiario, errors, function(beneficiario) {
                 console.log("Retorono nuevo beneficiario:", beneficiario);
                 return res.json(beneficiario);
               });
@@ -202,7 +203,7 @@ router.post("/consulta", (req, res) => {
 // @Route  POST api/beneficiarios/consulta
 // @Desc   Consultar un beneficiario
 // @Access Public
-const consultarTitular = (titular, callback) => {
+const consultarTitular = (titular, errors, callback) => {
   //Ir y consultar usuario
   const url =
     "https://osiapppre02.colsanitas.com/services/ProxyContratoMP.ProxyContratoMPHttpSoap12Endpoint";
@@ -302,7 +303,8 @@ const consultarTitular = (titular, callback) => {
 
                 if (
                   planesExcluidos.includes(contrato.codigoPlan) ||
-                  contratosEspeciales.includes(contrato.numeroContrato)
+                  contratosEspeciales.includes(contrato.numeroContrato) ||
+                  codigoCompaniaExcluidos.includes(contrato.codigoCompania)
                 ) {
                   contrato.error =
                     "El contrato seleccionado no requiere de la compra de Vales.";
@@ -582,7 +584,8 @@ const extraerContratos = contratosXml => {
 
     if (
       planesExcluidos.includes(contrato.codigoPlan) ||
-      contratosEspeciales.includes(contrato.numeroContrato)
+      contratosEspeciales.includes(contrato.numeroContrato) ||
+      codigoCompaniaExcluidos.includes(contrato.codigoCompania)
     ) {
       contrato.error =
         "El contrato seleccionado no requiere de la compra de Vales.";
