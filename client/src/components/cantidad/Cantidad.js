@@ -83,7 +83,8 @@ class Cantidad extends Component {
         valorVale: this.state.compra.valorVale,
         valorTotal:
           parseInt(this.state.compra.cantidad) *
-          parseInt(this.state.compra.valorVale)
+          parseInt(this.state.compra.valorVale),
+        codigoCompania: this.state.compra.contrato.codigoCompania
       };
 
       this.props.iniciarCompra(compraData);
