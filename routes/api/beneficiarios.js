@@ -302,9 +302,10 @@ const consultarTitular = (titular, errors, callback) => {
                 }
 
                 if (
+                  (contrato.codigoCompania != "10" &&
+                    contrato.codigoCompania != "20") ||
                   planesExcluidos.includes(contrato.codigoPlan) ||
-                  contratosEspeciales.includes(contrato.numeroContrato) ||
-                  codigoCompaniaExcluidos.includes(contrato.codigoCompania)
+                  contratosEspeciales.includes(contrato.numeroContrato)
                 ) {
                   contrato.error =
                     "El contrato seleccionado no requiere de la compra de Vales.";
@@ -583,9 +584,9 @@ const extraerContratos = contratosXml => {
     };
 
     if (
+      (contrato.codigoCompania != "10" && contrato.codigoCompania != "20") ||
       planesExcluidos.includes(contrato.codigoPlan) ||
-      contratosEspeciales.includes(contrato.numeroContrato) ||
-      codigoCompaniaExcluidos.includes(contrato.codigoCompania)
+      contratosEspeciales.includes(contrato.numeroContrato)
     ) {
       contrato.error =
         "El contrato seleccionado no requiere de la compra de Vales.";
