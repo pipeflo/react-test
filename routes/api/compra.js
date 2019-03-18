@@ -36,10 +36,10 @@ router.post("/iniciar", (req, res) => {
   //Consultar precio Vale
   // stringComra= "idTransaccion,valorTotal,iva,base,númeroCaja,númeroTerminal,idTransaccion,codigounico,propinaOCashBack,iac,idCajero,LRC"
   console.log("req.body", req.body);
-  const stringCompra = `01,${req.body.valorTotal},0,0,KIOSKO_602,DE593,${
+  const stringCompra = `01,${req.body.valorTotal},0,0,KIOSKO_602,000DE593,${
     req.body.idTransaccion
   },${
-    req.body.codigoCompania === "10" ? "11820826" : "11820826"
+    req.body.codigoCompania === "10" ? "011820826" : "011820826"
   },0,0,dataf001,`;
   const lrc = calculateLRC(stringCompra);
   /*const stringCompra = `01,${
