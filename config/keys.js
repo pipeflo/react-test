@@ -14,7 +14,7 @@ module.exports = {
     aplicacionAsigna: "KIOSKO_602"
   },
   planesExcluidos: ["55", "39", "33", "67", "16", "32", "12", "14", "25", "29"],
-  codigoCompaniaExcluidos: ["31"],
+  codigoCompaniaExcluidos: ["30", "31"],
   contratosEspeciales: [
     "101445",
     "101456",

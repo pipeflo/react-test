@@ -39,7 +39,7 @@ router.post("/iniciar", (req, res) => {
   const stringCompra = `01,${req.body.valorTotal},0,0,KIOSKO_602,DE593,${
     req.body.idTransaccion
   },${
-    req.body.codigoCompania === "10" ? "11820826" : "11820826"
+    req.body.codigoCompania === "10" ? "01" : "02"
   },0,0,dataf001,`;
   const lrc = calculateLRC(stringCompra);
   /*const stringCompra = `01,${
