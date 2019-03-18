@@ -36,12 +36,18 @@ router.post("/iniciar", (req, res) => {
   //Consultar precio Vale
   // stringComra= "idTransaccion,valorTotal,iva,base,númeroCaja,númeroTerminal,idTransaccion,codigounico,propinaOCashBack,iac,idCajero,LRC"
   console.log("req.body", req.body);
-  const stringCompra = `01,${
+  const stringCompra = `01,${req.body.valorTotal},0,0,KIOSKO_602,DE593,${
+    req.body.idTransaccion
+  },${
+    req.body.codigoCompania === "10" ? "11820826" : "11820826"
+  },0,0,dataf001,`;
+  const lrc = calculateLRC(stringCompra);
+  /*const stringCompra = `01,${
     req.body.valorTotal
   },0,0,KIOSKO_602,${numeroTerminal},${req.body.idTransaccion},${
     req.body.codigoCompania === "10" ? "010107308" : "010811792"
   },0,0,dataf001,`;
-  const lrc = calculateLRC(stringCompra);
+  const lrc = calculateLRC(stringCompra);*/
   const stringCompraFinal = stringCompra + lrc;
   //const stringCompra = `01,50,1,T0501,78175,0,0,11,59`;
 
