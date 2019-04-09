@@ -37,9 +37,9 @@ router.post("/iniciar", (req, res) => {
   // stringComra= "idTransaccion,valorTotal,iva,base,númeroCaja,númeroTerminal,idTransaccion,codigounico,propinaOCashBack,iac,idCajero,LRC"
   console.log("req.body", req.body);
   const stringCompra = `01,${req.body.valorTotal},0,0,KIOSKO_602,${
-    req.body.codigoCompania === "10" ? "000ZV856" : "000DE593"
+    req.body.codigoCompania === "10" ? "000A7UC5" : "000A7UDV"
   },${req.body.idTransaccion},${
-    req.body.codigoCompania === "10" ? "011820826" : "011820826"
+    req.body.codigoCompania === "10" ? "010107308" : "010811792"
   },0,0,dataf001,`;
   const lrc = calculateLRC(stringCompra);
   /*const stringCompra = `01,${
