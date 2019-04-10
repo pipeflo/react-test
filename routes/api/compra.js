@@ -91,7 +91,7 @@ router.post("/registrar", (req, res) => {
   } else {
     //Ir y consultar usuario
     const url =
-      "https://osiapppre02.colsanitas.com/services/ValeElectronico.ValeElectronicoHttpSoap12Endpoint?wsdl";
+      "https://services01.colsanitas.com/services/ValeElectronico.ValeElectronicoHttpSoap12Endpoint?wsdl";
 
     const input = {
       canal: registrarCompra.canal,
@@ -165,7 +165,7 @@ router.post("/tiraAuditoria", (req, res) => {
   } else {
     //Ir y consultar usuario
     const url =
-      "https://osiapppre02.colsanitas.com/services/GestionDocumentoEquivalente.GestionDocumentoEquivalenteHttpSoap12Endpoint?wsdl";
+      "https://services01.colsanitas.com/services/GestionDocumentoEquivalente.GestionDocumentoEquivalenteHttpSoap12Endpoint?wsdl";
 
     const input = {
       codigo_compania: req.body.contrato.codigoCompania,

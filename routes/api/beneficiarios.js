@@ -34,7 +34,7 @@ router.post("/consulta", (req, res) => {
   } else {
     //Ir y consultar usuario
     const url =
-      "https://osiapppre02.colsanitas.com/services/ProxyContratoMP.ProxyContratoMPHttpSoap12Endpoint";
+      "https://services01.colsanitas.com/services/ProxyContratoMP.ProxyContratoMPHttpSoap12Endpoint";
     const headers = {
       "user-agent": "sampleTest",
       "Content-Type": "text/xml;charset=UTF-8",
@@ -206,7 +206,7 @@ router.post("/consulta", (req, res) => {
 const consultarTitular = (titular, errors, callback) => {
   //Ir y consultar usuario
   const url =
-    "https://osiapppre02.colsanitas.com/services/ProxyContratoMP.ProxyContratoMPHttpSoap12Endpoint";
+    "https://services01.colsanitas.com/services/ProxyContratoMP.ProxyContratoMPHttpSoap12Endpoint";
   const headers = {
     "user-agent": "sampleTest",
     "Content-Type": "text/xml;charset=UTF-8",
@@ -362,7 +362,7 @@ router.post("/ciudad", (req, res) => {
   } else {
     //Ir y consultar usuario
     const url =
-      "https://osiapppre02.colsanitas.com/services/ProxyContratoMP.ProxyContratoMPHttpSoap12Endpoint";
+      "https://services01.colsanitas.com/services/ProxyContratoMP.ProxyContratoMPHttpSoap12Endpoint";
     const headers = {
       "user-agent": "sampleTest",
       "Content-Type": "text/xml;charset=UTF-8",

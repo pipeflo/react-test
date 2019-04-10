@@ -23,7 +23,7 @@ router.get("/", (req, res) => {
   let errors = {};
   //Ir y consultar usuario
   const url =
-    "https://osiapppre02.colsanitas.com/services/ProxyParametricas.ProxyParametricasHttpSoap11Endpoint";
+    "https://services01.colsanitas.com/services/ProxyParametricas.ProxyParametricasHttpSoap11Endpoint";
   const headers = {
     "user-agent": "sampleTest",
     "Content-Type": "text/xml;charset=UTF-8",
