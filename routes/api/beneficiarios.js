@@ -452,7 +452,7 @@ router.post("/precio", (req, res) => {
   } else {
     //Ir y consultar usuario
     const url =
-      "https://osiapppre02.colsanitas.com/services/GestionPines.GestionPinesHttpSoap12Endpoint";
+      "https://services01.colsanitas.com/services/GestionPines.GestionPinesHttpSoap12Endpoint";
     const headers = {
       "user-agent": "sampleTest",
       "Content-Type": "text/xml;charset=UTF-8",
