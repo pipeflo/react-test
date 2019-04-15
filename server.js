@@ -74,9 +74,8 @@ wss.on("connection", ws => {
                 //Error comunicación datafono o tiempo de espera
                 ws.send(
                   JSON.stringify({
-                    message: `La compra NO se ha realizado. No se obtuvo una respuesta del Datafono, por favor intente de nuevo.`,
-                    pagoExitoso: false,
-                    reintentar: true
+                    message: `Se presentó un error en la operación del datafono, por favor cancele la transacción e inicie de nuevo.`,
+                    pagoExitoso: false
                   })
                 );
 

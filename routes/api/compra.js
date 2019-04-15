@@ -218,4 +218,6 @@ const calculateLRC = str => {
   return lrc.toString(16);
 };
 
+const getTransactionId = str => {};
+
 module.exports = router;
