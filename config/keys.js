@@ -1,7 +1,7 @@
 module.exports = {
   mongoURI: "mongodb://localhost:27017/kioscolsanitas",
   numeroTerminal: "000ZV856",
-  dominioWebService: "osiapppre02", //osiapppre02 - PRUEBAS  //services01 - PROD
+  dominioWebService: "services01", //osiapppre02 - PRUEBAS  //services01 - PROD
   consultaPrecio: {
     userName: "casender.prest",
     userToken: "123",

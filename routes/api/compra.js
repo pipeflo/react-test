@@ -116,7 +116,8 @@ router.post("/registrar", (req, res) => {
         cantidad: req.body.compra.cantidad,
         valorTotalTrx: req.body.compra.valorTotal,
         mediosDePago: `5,${req.body.compra.valorTotal},0,0,D,0,${
-          req.body.compra.numeroAprobacion
+          //req.body.compra.numeroAprobacion.replace(/\D/g,'')
+          "tsg56378ksj27j8sjs8".replace(/\D/g, "")
         }`,
         vales: req.body.compra.cantidad,
         categoria: "",
@@ -126,6 +127,8 @@ router.post("/registrar", (req, res) => {
         estado: "2",
         tipoDocPrest: ""
       };
+
+      console.log("INPUT:::", input);
 
       soap.createClient(url, function(err, client) {
         client.registrar(input, function(err, result) {
