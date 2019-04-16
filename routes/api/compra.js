@@ -1,7 +1,11 @@
 const express = require("express");
 const fs = require("fs");
 const router = express.Router();
-const { registrarCompra, numeroTerminal } = require("../../config/keys");
+const {
+  registrarCompra,
+  numeroTerminal,
+  dominioWebService
+} = require("../../config/keys");
 const soapRequest = require("easy-soap-request");
 const soap = require("soap");
 
@@ -90,60 +94,65 @@ router.post("/registrar", (req, res) => {
     return res.status(400).json(errors);
   } else {
     //Ir y consultar usuario
-    const url =
-      "https://services01.colsanitas.com/services/ValeElectronico.ValeElectronicoHttpSoap12Endpoint?wsdl";
+    getTransactionId(function(errGettingId, idTransaccion) {
+      const url =
+        "https://" +
+        dominioWebService +
+        ".colsanitas.com/services/ValeElectronico.ValeElectronicoHttpSoap12Endpoint?wsdl";
 
-    const input = {
-      canal: registrarCompra.canal,
-      ciudad: req.body.compra.contrato.ciudad.codigo,
-      codigoCompania: req.body.compra.contrato.codigoCompania,
-      codigoConcepto: registrarCompra.codigoConcepto,
-      codigoEstacion: registrarCompra.codigoEstacion,
-      tipoDocUsuario: req.body.beneficiario.codTipoIdentificacion,
-      documentoIdentUsu: req.body.beneficiario.numeroIdentificacion,
-      contrato: req.body.compra.contrato.numeroContrato,
-      plan: req.body.compra.contrato.codigoPlan,
-      familia: req.body.compra.contrato.numeroFamilia,
-      usuario: req.body.compra.contrato.codigoTipoUsuario,
-      numerTransaccion: req.body.compra.numeroAprobacion,
-      cantidad: req.body.compra.cantidad,
-      valorTotalTrx: req.body.compra.valorTotal,
-      mediosDePago: `5,${req.body.compra.valorTotal},0,0,D,0,${
-        req.body.compra.numeroAprobacion
-      }`,
-      vales: req.body.compra.cantidad,
-      categoria: "",
-      documentoIdentPrest: "",
-      servicio: "",
-      viaIngreso: "",
-      estado: "2",
-      tipoDocPrest: ""
-    };
+      const input = {
+        canal: registrarCompra.canal,
+        ciudad: req.body.compra.contrato.ciudad.codigo,
+        codigoCompania: req.body.compra.contrato.codigoCompania,
+        codigoConcepto: registrarCompra.codigoConcepto,
+        codigoEstacion: registrarCompra.codigoEstacion,
+        tipoDocUsuario: req.body.beneficiario.codTipoIdentificacion,
+        documentoIdentUsu: req.body.beneficiario.numeroIdentificacion,
+        contrato: req.body.compra.contrato.numeroContrato,
+        plan: req.body.compra.contrato.codigoPlan,
+        familia: req.body.compra.contrato.numeroFamilia,
+        usuario: req.body.compra.contrato.codigoTipoUsuario,
+        numerTransaccion: idTransaccion,
+        cantidad: req.body.compra.cantidad,
+        valorTotalTrx: req.body.compra.valorTotal,
+        mediosDePago: `5,${req.body.compra.valorTotal},0,0,D,0,${
+          req.body.compra.numeroAprobacion
+        }`,
+        vales: req.body.compra.cantidad,
+        categoria: "",
+        documentoIdentPrest: "",
+        servicio: "",
+        viaIngreso: "",
+        estado: "2",
+        tipoDocPrest: ""
+      };
 
-    soap.createClient(url, function(err, client) {
-      client.registrar(input, function(err, result) {
-        if (err) {
-          errors.mensaje =
-            "No ha sido posible registrar la compra del Vale con Colsanitas, por favor comuníquese a la línea 4871920 o diríjase al jefe de servicios para validar su(s) vale(s).";
-          return res.status(400).json(errors);
-        } else {
-          console.log(result);
-          if (result) {
-            if (result.ValeElectronico[0].codigoError != "0") {
-              errors.mensaje = result.ValeElectronico[0].descripcionError;
-              return res.status(400).json(errors);
-            } else {
-              req.body.compra.transaccion =
-                result.ValeElectronico[0].transaccion;
-              req.body.compra.valeElectronico = result.ValeElectronico;
-              return res.json(req.body);
-            }
-          } else {
+      soap.createClient(url, function(err, client) {
+        client.registrar(input, function(err, result) {
+          if (err) {
             errors.mensaje =
               "No ha sido posible registrar la compra del Vale con Colsanitas, por favor comuníquese a la línea 4871920 o diríjase al jefe de servicios para validar su(s) vale(s).";
             return res.status(400).json(errors);
+          } else {
+            console.log(result);
+            if (result) {
+              if (result.ValeElectronico[0].codigoError != "0") {
+                errors.mensaje = result.ValeElectronico[0].descripcionError;
+                return res.status(400).json(errors);
+              } else {
+                setTransactionId(idTransaccion);
+                req.body.compra.transaccion =
+                  result.ValeElectronico[0].transaccion;
+                req.body.compra.valeElectronico = result.ValeElectronico;
+                return res.json(req.body);
+              }
+            } else {
+              errors.mensaje =
+                "No ha sido posible registrar la compra del Vale con Colsanitas, por favor comuníquese a la línea 4871920 o diríjase al jefe de servicios para validar su(s) vale(s).";
+              return res.status(400).json(errors);
+            }
           }
-        }
+        });
       });
     });
   }
@@ -165,7 +174,9 @@ router.post("/tiraAuditoria", (req, res) => {
   } else {
     //Ir y consultar usuario
     const url =
-      "https://services01.colsanitas.com/services/GestionDocumentoEquivalente.GestionDocumentoEquivalenteHttpSoap12Endpoint?wsdl";
+      "https://" +
+      dominioWebService +
+      ".colsanitas.com/services/GestionDocumentoEquivalente.GestionDocumentoEquivalenteHttpSoap12Endpoint?wsdl";
 
     const input = {
       codigo_compania: req.body.contrato.codigoCompania,
@@ -218,6 +229,30 @@ const calculateLRC = str => {
   return lrc.toString(16);
 };
 
-const getTransactionId = str => {};
+const getTransactionId = callback => {
+  fs.readFile("./config/idTransaccion.txt", "utf8", function(err, contents) {
+    if (!err) {
+      if (contents) {
+        console.log(contents);
+        contents = parseInt(contents, 10);
+        console.log("idTransaccion::::::", contents + 1);
+        callback(null, contents + 1);
+      }
+    } else {
+      callback("No ha sido posible obtener el Id de la Transacción", null);
+    }
+  });
+};
+
+const setTransactionId = idTransaccion => {
+  fs.writeFile("./config/idTransaccion.txt", idTransaccion, function(err) {
+    if (err) {
+      console.log("Error al guardar el ID De la Transacción");
+      return "No ha sido posible guardar el Id de la Transacción";
+    } else {
+      console.log("Escribio idTransaccion:", idTransaccion);
+    }
+  });
+};
 
 module.exports = router;

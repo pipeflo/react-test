@@ -7,7 +7,8 @@ const {
   consultaPrecio,
   contratosEspeciales,
   planesExcluidos,
-  codigoCompaniaExcluidos
+  codigoCompaniaExcluidos,
+  dominioWebService
 } = require("../../config/keys");
 
 //Beneficiario validator
@@ -34,7 +35,9 @@ router.post("/consulta", (req, res) => {
   } else {
     //Ir y consultar usuario
     const url =
-      "https://services01.colsanitas.com/services/ProxyContratoMP.ProxyContratoMPHttpSoap12Endpoint";
+      "https://" +
+      dominioWebService +
+      ".colsanitas.com/services/ProxyContratoMP.ProxyContratoMPHttpSoap12Endpoint";
     const headers = {
       "user-agent": "sampleTest",
       "Content-Type": "text/xml;charset=UTF-8",
@@ -206,7 +209,9 @@ router.post("/consulta", (req, res) => {
 const consultarTitular = (titular, errors, callback) => {
   //Ir y consultar usuario
   const url =
-    "https://services01.colsanitas.com/services/ProxyContratoMP.ProxyContratoMPHttpSoap12Endpoint";
+    "https://" +
+    dominioWebService +
+    ".colsanitas.com/services/ProxyContratoMP.ProxyContratoMPHttpSoap12Endpoint";
   const headers = {
     "user-agent": "sampleTest",
     "Content-Type": "text/xml;charset=UTF-8",
@@ -362,7 +367,9 @@ router.post("/ciudad", (req, res) => {
   } else {
     //Ir y consultar usuario
     const url =
-      "https://services01.colsanitas.com/services/ProxyContratoMP.ProxyContratoMPHttpSoap12Endpoint";
+      "https://" +
+      dominioWebService +
+      ".colsanitas.com/services/ProxyContratoMP.ProxyContratoMPHttpSoap12Endpoint";
     const headers = {
       "user-agent": "sampleTest",
       "Content-Type": "text/xml;charset=UTF-8",
@@ -422,7 +429,6 @@ router.post("/ciudad", (req, res) => {
             ].ConsultarSal.consultarSal.contratosMP.Caratula.direccionContrato.ciudad.descripcion.text();
 
             req.body.ciudad = ciudad;
-            console.log("Contrato con ciudad:", req.body);
             return res.json(req.body);
           } else {
             errors.mensaje = respuesta["s:Envelope"]["s:Header"][
@@ -452,7 +458,9 @@ router.post("/precio", (req, res) => {
   } else {
     //Ir y consultar usuario
     const url =
-      "https://services01.colsanitas.com/services/GestionPines.GestionPinesHttpSoap12Endpoint";
+      "https://" +
+      dominioWebService +
+      ".colsanitas.com/services/GestionPines.GestionPinesHttpSoap12Endpoint";
     const headers = {
       "user-agent": "sampleTest",
       "Content-Type": "text/xml;charset=UTF-8",
@@ -502,8 +510,6 @@ router.post("/precio", (req, res) => {
        </ges:ConsultaPrecioEnt>
     </soapenv:Body>
  </soapenv:Envelope>`;
-
-    console.log("XML traer precio:", xml);
 
     (async () => {
       try {

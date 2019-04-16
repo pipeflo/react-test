@@ -82,9 +82,7 @@ class Inicio extends Component {
               alignContent: "center",
               whiteSpace: "normal",
               overflowWrap: "break-word",
-              paddingTop: "8%",
-              alignContent: "center",
-              
+              paddingTop: "8%"
             }}
             value={i}
             id="btn_primario"

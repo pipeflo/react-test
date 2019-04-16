@@ -3,7 +3,11 @@ const soapRequest = require("easy-soap-request");
 const fs = require("fs");
 const router = express.Router();
 const xmlreader = require("xmlreader");
-const { consultaPrecio, registrarCompra } = require("../../config/keys");
+const {
+  consultaPrecio,
+  registrarCompra,
+  dominioWebService
+} = require("../../config/keys");
 
 //Beneficiario validator
 const validateConsultaBeneficiario = require("../../validation/consultaBeneficiario");
@@ -23,7 +27,9 @@ router.get("/", (req, res) => {
   let errors = {};
   //Ir y consultar usuario
   const url =
-    "https://services01.colsanitas.com/services/ProxyParametricas.ProxyParametricasHttpSoap11Endpoint";
+    "https://" +
+    dominioWebService +
+    ".colsanitas.com/services/ProxyParametricas.ProxyParametricasHttpSoap11Endpoint";
   const headers = {
     "user-agent": "sampleTest",
     "Content-Type": "text/xml;charset=UTF-8",
